@@ -1,0 +1,11 @@
+{
+  "resources/assets/js/admin.js": {
+    "file": "js/admin.BoYsTGLl.js",
+    "name": "admin",
+    "src": "resources/assets/js/admin.js",
+    "isEntry": true,
+    "css": [
+      "css/admin.axIS698B.css"
+    ]
+  }
+}

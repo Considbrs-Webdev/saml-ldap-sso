@@ -1,0 +1,28 @@
+{
+    "$schema": "https://raw.githubusercontent.com/infection/infection/0.29.14/resources/schema.json",
+    "source": {
+        "directories": [
+            "src/Saml",
+            "src/Ldap",
+            "src/Users",
+            "src/Auth"
+        ]
+    },
+    "timeout": 15,
+    "logs": {
+        "text": "infection.log",
+        "html": "infection.html"
+    },
+    "tmpDir": ".infection-tmp",
+    "testFramework": "phpunit",
+    "phpUnit": {
+        "customPath": "vendor/bin/pest"
+    },
+    "testFrameworkOptions": "--testsuite=Unit",
+    // Floor until a pcov/Xdebug run produces a measured MSI. Raise only.
+    "minMsi": 0,
+    "minCoveredMsi": 0,
+    "mutators": {
+        "@default": true
+    }
+}

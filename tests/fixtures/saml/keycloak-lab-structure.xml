@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- Structural reference only: Keycloak-shaped Response. Signature is not valid. -->
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_lab" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?sls_saml=acs">
+  <saml:Issuer>https://idp.example.test/realms/test</saml:Issuer>
+  <samlp:Status><samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/></samlp:Status>
+  <saml:Assertion ID="_lab-assertion" Version="2.0" IssueInstant="2024-06-15T12:00:00Z">
+    <saml:Issuer>https://idp.example.test/realms/test</saml:Issuer>
+    <saml:Subject>
+      <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">alice</saml:NameID>
+    </saml:Subject>
+    <saml:AttributeStatement>
+      <saml:Attribute Name="uid" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic"><saml:AttributeValue>alice</saml:AttributeValue></saml:Attribute>
+      <saml:Attribute Name="mail"><saml:AttributeValue>alice@example.test</saml:AttributeValue></saml:Attribute>
+      <saml:Attribute Name="givenName"><saml:AttributeValue>Alice</saml:AttributeValue></saml:Attribute>
+      <saml:Attribute Name="sn"><saml:AttributeValue>Example</saml:AttributeValue></saml:Attribute>
+      <saml:Attribute Name="groups"><saml:AttributeValue>cn=editors,ou=groups,o=example</saml:AttributeValue></saml:Attribute>
+    </saml:AttributeStatement>
+  </saml:Assertion>
+</samlp:Response>

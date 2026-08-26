@@ -1,0 +1,582 @@
+# Copyright (C) 2026 Consid Borås
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: SAML LDAP SSO 0.1.11\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/saml-ldap-sso\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-26T15:21:08+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: saml-ldap-sso\n"
+
+#. Plugin Name of the plugin
+#: saml-ldap-sso.php
+#: src/Admin/SettingsPage.php:78
+#: src/Admin/SettingsPage.php:79
+msgid "SAML LDAP SSO"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: saml-ldap-sso.php
+msgid "https://github.com/Considbrs-Webdev/saml-ldap-sso"
+msgstr ""
+
+#. Description of the plugin
+#: saml-ldap-sso.php
+msgid "Secure SAML SSO + LDAP authentication for WordPress."
+msgstr ""
+
+#. Author of the plugin
+#: saml-ldap-sso.php
+msgid "Consid Borås"
+msgstr ""
+
+#. Author URI of the plugin
+#: saml-ldap-sso.php
+msgid "https://profiles.wordpress.org/considboras/"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:40
+msgid "Settings saved."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:44
+msgid "Recent SAML login rejections (ACS)"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:45
+msgid "The SSO diagnostic test only validates the outbound AuthnRequest. These lines show why inbound SAML responses were rejected."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:52
+msgid "General"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:55
+msgid "Automatic SSO"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:59
+msgid "Redirect visits to <code>wp-login.php</code> to SAML"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:61
+msgid "When on, visits go to the IdP. Local password login uses the emergency URL under Security. When off, the form stays visible and a Log in with SSO button is shown below the form."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:65
+msgid "Default role"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:75
+msgid "No group match"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:79
+msgid "Deny login when mappings exist and no group matches"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:84
+msgid "Role downgrade"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:88
+msgid "Remove mapped roles when the user no longer matches the group"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:90
+msgid "Only roles granted by this plugin are removed. The last remaining administrator is never downgraded."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:94
+msgid "Protected logins"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:97
+msgid "One WordPress username per line. These accounts never lose the administrator role through group mapping."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:101
+msgid "Role priority"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:104
+msgid "Comma-separated role slugs, most privileged first. Used by the “highest role” strategy. Roles not listed rank below these."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:111
+#: src/Admin/SiteHealth.php:262
+#: src/Admin/SiteHealth.php:263
+#: src/Admin/SiteHealth.php:264
+msgid "Security"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:114
+msgid "Strict SAML validation"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:118
+msgid "Require IdP entity ID, audience, destination, recipient, and matching AuthnRequest ID"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:120
+msgid "Recommended. Disabling weakens assertion binding (not recommended in production)."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:124
+msgid "IdP-initiated SSO"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:128
+msgid "Accept unsolicited responses without <code>InResponseTo</code>"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:130
+msgid "Off by default. Enabling this drops the binding to an AuthnRequest we sent, so replay protection relies on the Recipient and response ID only. Enable only if the IdP starts the login."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:134
+msgid "Clock skew tolerance"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:137
+msgid "seconds"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:138
+msgid "Allowed time drift between the IdP and this server when validating assertion validity windows. Default 60, maximum 300."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:142
+msgid "Trust proxy HTTPS headers"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:146
+msgid "Honor <code>X-Forwarded-Proto</code> / <code>X-Forwarded-SSL</code>"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:148
+msgid "Enable only behind a trusted reverse proxy that terminates TLS."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:152
+msgid "Link accounts by email"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:156
+msgid "Allow LDAP password login to match existing WordPress users by email"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:158
+msgid "Off by default (OWASP). Applies to the LDAP password path only. SAML may bind to an existing user_login on first login; afterwards identity is the stored IdP NameID, never email."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:162
+msgid "Emergency local login"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:166
+msgid "Secret URL for local WordPress accounts only. SAML/LDAP users cannot use it. Store securely."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:168
+msgid "No bypass key configured. Save settings or regenerate a key below."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:170
+msgid "Regenerate emergency login key"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:174
+msgid "Log retention"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:177
+msgid "days"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:178
+msgid "Audit and diagnostic log lines older than this are deleted daily. Allowed range: 7–730 days (default 90)."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:185
+msgid "SAML"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:188
+msgid "SP Entity ID"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:192
+msgid "ACS URL"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:196
+msgid "Metadata URL"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:200
+msgid "SP metadata"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:202
+msgid "Import this file in F5 under <strong>SAML Identity Provider → SAML SP Connectors → From Metadata</strong>. Set signing certificate to <strong>None</strong>."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:204
+msgid "Download metadata XML"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:205
+msgid "Copy metadata"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:211
+msgid "Identity Provider"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:214
+msgid "Entity ID"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:218
+msgid "SSO URL"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:221
+msgid "Use <code>SingleSignOnService</code> from IdP metadata, not the <code>.xml</code> metadata file URL."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:225
+msgid "Group attribute"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:229
+msgid "Username attribute"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:233
+msgid "Email attribute"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:237
+msgid "First name attribute"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:241
+msgid "Last name attribute"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:245
+msgid "X509 certificate (PEM)"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:249
+msgid "Secondary X509 certificate (PEM)"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:252
+msgid "Optional. Assertions signed with either certificate are accepted, so the IdP certificate can be rotated without downtime. Add the new certificate here, wait for the IdP to switch, then move it to the field above and clear this one."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:259
+msgid "LDAP"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:262
+msgid "LDAP fallback"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:266
+msgid "Enable LDAP fallback authentication"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:268
+msgid "When enabled and fully configured, LDAP is used for password login and to verify users before WordPress creates a <strong>new</strong> account from SAML. Existing WordPress accounts can still sign in via SAML if the directory is unavailable. When disabled (or incomplete), SAML runs alone and can create users from IdP attributes."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:272
+msgid "Directory type"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:275
+msgid "eDirectory"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:276
+msgid "Active Directory"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:281
+msgid "Hosts"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:284
+msgid "Comma-separated. Use <code>ldaps://host:636</code> in production."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:288
+msgid "Base DN"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:292
+msgid "Bind user / Bind DN"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:295
+msgid "The service account used for LDAP reads. Can be DN, UPN, or account name depending on your directory."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:299
+msgid "Bind password"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:302
+msgid "Leave empty to keep existing secret."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:306
+msgid "Security override"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:310
+msgid "Allow <code>ldap://</code> (not recommended)"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:315
+msgid "User filter"
+msgstr ""
+
+#. translators: 1: %s code token, 2: typical eDirectory filter, 3: typical Active Directory filter
+#: resources/views/admin/settings-page.php:323
+#, php-format
+msgid "Use %1$s as username placeholder. Typical eDirectory: %2$s Typical AD: %3$s"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:335
+msgid "Group attribute (eDirectory)"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:339
+msgid "Group attribute (AD)"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:343
+msgid "Connection test"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:345
+msgid "Test LDAP"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:346
+msgid "Quick service bind validation for current LDAP settings."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:354
+msgid "Group to role mappings"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:355
+msgid "One row per mapping in format: <code>source|group|role</code>. Example: <code>ldap|cn=wp-admins,ou=groups,o=org|administrator</code>"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:360
+msgid "Save settings"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:365
+msgid "Diagnostics"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:366
+msgid "Use this for technical validation. Password is never written to logs."
+msgstr ""
+
+#: resources/views/admin/settings-page.php:369
+msgid "Test username"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:373
+msgid "Test password"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:377
+msgid "Run tests"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:379
+msgid "Test LDAP auth"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:380
+msgid "Test SSO flow"
+msgstr ""
+
+#: resources/views/admin/settings-page.php:384
+msgid "Technical log"
+msgstr ""
+
+#: src/Admin/Diagnostics.php:59
+#: src/Admin/Diagnostics.php:229
+#: src/Admin/SettingsPage.php:92
+#: src/Admin/SettingsPage.php:207
+msgid "Unauthorized."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:47
+msgid "SAML LDAP SSO: IdP certificate"
+msgstr ""
+
+#: src/Admin/SiteHealth.php:51
+msgid "SAML LDAP SSO: LDAP TLS"
+msgstr ""
+
+#: src/Admin/SiteHealth.php:55
+msgid "SAML LDAP SSO: HTTPS"
+msgstr ""
+
+#: src/Admin/SiteHealth.php:59
+msgid "SAML LDAP SSO: LDAP configuration"
+msgstr ""
+
+#: src/Admin/SiteHealth.php:88
+msgid "No primary IdP certificate is configured."
+msgstr ""
+
+#. translators: %s: primary or secondary
+#: src/Admin/SiteHealth.php:98
+#, php-format
+msgid "The %s IdP certificate could not be parsed."
+msgstr ""
+
+#. translators: 1: primary or secondary, 2: expiry date
+#: src/Admin/SiteHealth.php:110
+#, php-format
+msgid "The %1$s IdP certificate expired on %2$s. SSO will fail until it is replaced."
+msgstr ""
+
+#. translators: 1: primary or secondary, 2: expiry date
+#: src/Admin/SiteHealth.php:118
+#, php-format
+msgid "The %1$s IdP certificate expires on %2$s (within 30 days)."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:130
+msgid "IdP certificates are valid."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:131
+msgid "Pinned IdP certificates are present and not expiring within 30 days."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:138
+msgid "IdP certificate needs attention."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:155
+#: src/Admin/SiteHealth.php:229
+msgid "LDAP is not enabled."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:156
+msgid "LDAP fallback is off; TLS for the directory is not required."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:172
+msgid "LDAP hosts use TLS or insecure LDAP is explicitly allowed."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:173
+msgid "Directory hosts are ldaps://, or “Allow ldap://” is enabled for a lab environment."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:180
+msgid "LDAP is enabled without ldaps://."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:181
+msgid "Use ldaps:// (or enable StartTLS on ldap://). Plaintext ldap:// without “Allow ldap://” will fail in production."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:196
+msgid "WordPress sees this request as HTTPS."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:197
+msgid "Secure cookies and ACS URLs can be generated correctly."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:205
+msgid "HTTPS is not detected locally; proxy headers are trusted."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:206
+msgid "Confirm the reverse proxy strips client-supplied X-Forwarded-* headers."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:213
+msgid "WordPress does not see HTTPS."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:214
+msgid "Auth cookies may be marked insecure and the ACS URL may be http://. Terminate TLS at the web server, or enable “Trust proxy HTTPS headers” only behind a trusted reverse proxy."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:230
+msgid "SAML runs without directory verification."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:238
+msgid "LDAP is configured."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:239
+msgid "Host, base DN, bind user, and bind secret are present. Use diagnostics or `wp sls test-ldap` for a live bind."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:246
+msgid "LDAP is enabled but incomplete."
+msgstr ""
+
+#: src/Admin/SiteHealth.php:247
+msgid "Fill in hosts, base DN, bind user, and bind password, or disable LDAP."
+msgstr ""
+
+#: src/Assets/Admin.php:85
+msgid "Copied"
+msgstr ""
+
+#: src/Auth/AuthFailureReason.php:101
+#: src/Providers/PluginServiceProvider.php:153
+#: src/Saml/Handler.php:257
+#: src/Saml/Handler.php:268
+msgid "Invalid credentials."
+msgstr ""
+
+#: src/Saml/Handler.php:121
+msgid "Log in with SSO"
+msgstr ""
+
+#: src/Saml/Handler.php:210
+#: src/Saml/Handler.php:1080
+#: src/Saml/Handler.php:1083
+msgid "SSO is not configured."
+msgstr ""
+
+#: src/Saml/Handler.php:1090
+msgid "Redirecting to sign in…"
+msgstr ""
+
+#: src/Saml/Handler.php:1094
+msgid "Continue to sign in"
+msgstr ""
+
+#: src/Settings/Options.php:329
+msgid "Stored LDAP bind password could not be decrypted. This happens when wp-config.php security salts are rotated or the site is copied between environments. Re-enter the bind password in the plugin settings."
+msgstr ""

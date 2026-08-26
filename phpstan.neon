@@ -1,0 +1,36 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    excludePaths:
+        - vendor
+        - vendor-prefixed
+        - tests
+        - dist
+        - node_modules
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+    scanFiles:
+        - helpers.php
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    ignoreErrors:
+        - identifier: empty.notAllowed
+        - identifier: booleanNot.exprNotBoolean
+        - identifier: booleanAnd.rightNotBoolean
+        - identifier: booleanAnd.leftNotBoolean
+        - identifier: booleanOr.rightNotBoolean
+        - identifier: booleanOr.leftNotBoolean
+        - identifier: if.condNotBoolean
+        - identifier: ternary.condNotBoolean
+        - identifier: ternary.shortNotAllowed
+        - identifier: cast.useless
+        - identifier: isset.offset
+        - identifier: arrayFilter.strict
+        - identifier: foreach.nonIterable
+        - identifier: if.alwaysTrue
+        - identifier: nullCoalesce.property

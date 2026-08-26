@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+use SamlLdapSso\Auth\AuthFailureReason;
+use SamlLdapSso\Saml\SignatureVerifier;
+use SamlLdapSso\Tests\Support\HandlerFactory;
+
+function slsSecurityFixture(string $name): string
+{
+    return (string) file_get_contents(dirname(__DIR__) . '/fixtures/saml/' . $name);
+}
+
+it('records wrapping as a signed assertion plus an unsigned sibling', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(slsSecurityFixture('dual-assertion.xml'), slsSecurityFixture('idp.crt'));
+    expect($result->ok)->toBeTrue()
+        ->and($result->signedId)->toBe('_assertion1');
+
+    $xp = new DOMXPath($result->dom);
+    $assertions = $xp->query('//*[local-name()="Assertion"]');
+    expect($assertions->length)->toBe(2);
+});
+
+it('rejects wrapping at ACS even when the signed assertion verifies', function () {
+    $factory = new HandlerFactory();
+    $factory->seedOptions();
+    set_transient('sls_req_' . md5('_req1'), 1, 300);
+    $_POST['SAMLResponse'] = base64_encode(slsSecurityFixture('dual-assertion.xml'));
+    try {
+        $factory->processAcs($factory->make());
+        expect(false)->toBeTrue('Expected InvalidAssertion');
+    } catch (SamlLdapSso\Exception\InvalidAssertion $e) {
+        expect($e->reason)->toBe(AuthFailureReason::AssertionCountInvalid);
+    }
+});
+
+it('does not collapse NameID across XML comments after verification', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(slsSecurityFixture('comment-nameid.xml'), slsSecurityFixture('idp.crt'));
+    expect($result->ok)->toBeTrue();
+    $xp = new DOMXPath($result->dom);
+    $nameId = $xp->query('//*[local-name()="NameID"]')->item(0);
+    expect($nameId->textContent)->not->toBe('admin');
+});
+
+it('rejects comment injection in uid AttributeValue at ACS', function () {
+    $factory = new HandlerFactory();
+    $factory->seedOptions();
+    set_transient('sls_req_' . md5('_req1'), 1, 300);
+    $_POST['SAMLResponse'] = base64_encode(slsSecurityFixture('comment-uid.xml'));
+    try {
+        $factory->processAcs($factory->make());
+        expect(false)->toBeTrue('Expected InvalidAssertion');
+    } catch (SamlLdapSso\Exception\InvalidAssertion $e) {
+        expect($e->reason)->toBe(AuthFailureReason::CommentInNameId);
+    }
+});
+
+it('rejects a certificate swap', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(slsSecurityFixture('valid-assertion.xml'), slsSecurityFixture('other.crt'));
+    expect($result->ok)->toBeFalse();
+});
+
+it('rejects SHA-1 algorithm downgrade', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(slsSecurityFixture('sha1-assertion.xml'), slsSecurityFixture('idp.crt'));
+    expect($result->ok)->toBeFalse()->and($result->error)->toBe('sha1_rejected');
+});
+
+it('rejects XXE', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(slsSecurityFixture('xxe.xml'), slsSecurityFixture('idp.crt'));
+    expect($result->ok)->toBeFalse();
+});
+
+it('rejects entity expansion', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(slsSecurityFixture('billion-laughs.xml'), slsSecurityFixture('idp.crt'));
+    expect($result->ok)->toBeFalse();
+});
+
+it('rejects oversized SAMLResponse before decode in the Handler', function () {
+    $factory = new HandlerFactory();
+    $factory->seedOptions(['general' => ['saml_response_max_bytes' => 100]]);
+    $_POST['SAMLResponse'] = str_repeat('A', 101);
+    $_SERVER['REQUEST_METHOD'] = 'POST';
+    $_GET['sls_saml'] = 'acs';
+    try {
+        $factory->make()->handleSamlRoutes();
+        expect(false)->toBeTrue('Expected ACS rejection');
+    } catch (RuntimeException $e) {
+        expect($e->getMessage())->toBe('Invalid credentials.');
+    }
+});

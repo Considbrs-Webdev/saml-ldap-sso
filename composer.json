@@ -1,0 +1,85 @@
+{
+    "name": "considbrs-webdev/saml-ldap-sso",
+    "description": "Secure SAML SSO and LDAP authentication for WordPress",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://github.com/Considbrs-Webdev/saml-ldap-sso",
+    "require": {
+        "php": ">=8.2",
+        "ext-dom": "*",
+        "ext-ldap": "*",
+        "ext-openssl": "*",
+        "robrichards/xmlseclibs": "^3.1.4"
+    },
+    "require-dev": {
+        "brain/monkey": "^2.6",
+        "infection/infection": "^0.29",
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-type-coverage": "^3.0",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "rector/rector": "^2.0",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "wp-phpunit/wp-phpunit": "^6.0",
+        "yoast/phpunit-polyfills": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SamlLdapSso\\": "src/",
+            "SamlLdapSso\\Vendor\\RobRichards\\XMLSecLibs\\": "vendor-prefixed/robrichards/xmlseclibs/src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SamlLdapSso\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "prefix-namespaces": [
+            "sh -c 'test -f ./bin/strauss.phar || curl -fsSL -o bin/strauss.phar https://github.com/BrianHenryIE/strauss/releases/download/0.22.2/strauss.phar'",
+            "@php bin/strauss.phar",
+            "@composer dump-autoload"
+        ],
+        "post-install-cmd": [
+            "@prefix-namespaces"
+        ],
+        "post-update-cmd": [
+            "@prefix-namespaces"
+        ],
+        "test": "pest --configuration=phpunit.xml.dist",
+        "test:unit": "pest --configuration=phpunit.xml.dist --testsuite=Unit",
+        "test:security": "pest --configuration=phpunit.xml.dist --testsuite=Security",
+        "test:integration": "pest --configuration=phpunit.integration.xml.dist",
+        "test:type-coverage": "pest --configuration=phpunit.xml.dist --type-coverage --min=100",
+        "phpstan": "phpstan analyse --memory-limit=1G",
+        "infection": "infection --threads=max --min-msi=0 --min-covered-msi=0",
+        "rector": "rector process --dry-run"
+    },
+    "extra": {
+        "strauss": {
+            "target_directory": "vendor-prefixed",
+            "namespace_prefix": "SamlLdapSso\\Vendor\\",
+            "classmap_prefix": "SamlLdapSso_",
+            "constant_prefix": "SLS_",
+            "packages": [
+                "robrichards/xmlseclibs"
+            ],
+            "delete_vendor_packages": true,
+            "delete_vendor_files": true,
+            "exclude_git_files": false
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "infection/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "repositories": [{
+        "name": "packagist",
+        "type": "composer",
+        "url": "https://packagist.org"
+    }]
+}
