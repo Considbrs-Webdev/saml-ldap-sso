@@ -323,7 +323,6 @@ Settings live under **Settings → SAML LDAP SSO** (`options-general.php?page=sl
 | [`docs/f5-checklist.md`](docs/f5-checklist.md) | Staging checklist |
 | [`docs/threat-model.md`](docs/threat-model.md) | Threat model |
 | [`docs/privacy.md`](docs/privacy.md) | Logging and personal data |
-| [`docs/roadmap.md`](docs/roadmap.md) | Phased roadmap |
 | `readme.txt` | wordpress.org metadata and changelog |
 
 ## Contributing
