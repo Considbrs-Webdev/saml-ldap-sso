@@ -11,7 +11,7 @@ parameters:
         - vendor-prefixed
         - tests
         - dist
-        - node_modules
+        - node_modules (?)
     treatPhpDocTypesAsCertain: false
     reportUnmatchedIgnoredErrors: false
     scanFiles:
