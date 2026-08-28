@@ -4,7 +4,7 @@ Tags: saml, ldap, sso, security, authentication
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.1.11
+Stable tag: 0.1.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,9 @@ These four filters are the public extension API (signatures will not change in p
 `sls_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
+
+= 0.1.12 =
+* Settings screen: show WordPress’s “Settings saved” notice once (remove the duplicate plugin notice).
 
 = 0.1.11 =
 * SAML first login may bind to an existing WordPress `user_login` (LDAP-optional 0.1.3 rule). Afterwards identity stays the stored NameID. Email still cannot choose the SAML account.

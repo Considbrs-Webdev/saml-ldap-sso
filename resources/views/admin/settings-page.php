@@ -24,7 +24,6 @@
  * @var string $protected_logins
  * @var string $role_priority
  * @var int    $log_retention_days
- * @var bool   $settings_updated
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -36,9 +35,6 @@ $code_ok = array( 'code' => array() );
 <div class="wrap sls-wrap">
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 	<?php settings_errors( 'sls_settings' ); ?>
-	<?php if ( ! empty( $settings_updated ) ) : ?>
-		<div id="message" class="updated notice is-dismissible"><p><?php esc_html_e( 'Settings saved.', 'saml-ldap-sso' ); ?></p></div>
-	<?php endif; ?>
 	<?php if ( ! empty( $recent_acs_failures ) ) : ?>
 		<div class="notice notice-warning">
 			<p><strong><?php esc_html_e( 'Recent SAML login rejections (ACS)', 'saml-ldap-sso' ); ?></strong></p>

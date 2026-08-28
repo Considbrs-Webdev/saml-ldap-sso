@@ -94,11 +94,6 @@ final class SettingsPage
 
         $options = $this->options->getAll();
         $bindUserValue = (string) ($options['ldap']['bind_user'] ?? ($options['ldap']['bind_dn'] ?? ''));
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Flag is set by options.php after Settings API nonce check.
-        $settingsUpdated = isset($_GET['settings-updated'])
-            ? sanitize_text_field(wp_unslash((string) $_GET['settings-updated']))
-            : '';
-        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         $this->view->render(
             'admin/settings-page',
@@ -123,7 +118,6 @@ final class SettingsPage
                 'protected_logins' => (string) ($options['general']['protected_logins'] ?? ''),
                 'role_priority' => (string) ($options['general']['role_priority'] ?? ''),
                 'log_retention_days' => (int) ($options['general']['log_retention_days'] ?? 90),
-                'settings_updated' => 'true' === $settingsUpdated,
             ]
         );
     }
