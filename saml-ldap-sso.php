@@ -3,7 +3,7 @@
  * Plugin Name: SAML LDAP SSO
  * Plugin URI: https://github.com/Considbrs-Webdev/saml-ldap-sso
  * Description: Secure SAML SSO + LDAP authentication for WordPress.
- * Version: 0.1.12
+ * Version: 0.1.13
  * Author: Consid Borås
  * Author URI: https://profiles.wordpress.org/considboras/
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SLS_VERSION', '0.1.12' );
+define( 'SLS_VERSION', '0.1.13' );
 define( 'SLS_PLUGIN_FILE', __FILE__ );
 
 use SamlLdapSso\Activator;
