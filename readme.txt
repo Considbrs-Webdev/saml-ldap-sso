@@ -4,7 +4,7 @@ Tags: saml, ldap, sso, security, authentication
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.1.15
+Stable tag: 0.1.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,9 @@ These four filters are the public extension API (signatures will not change in p
 `sls_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
+
+= 0.1.16 =
+* Update dependencies
 
 = 0.1.15 =
 * PHPStan: treat `node_modules` as an optional exclude so CI can run without npm install.
