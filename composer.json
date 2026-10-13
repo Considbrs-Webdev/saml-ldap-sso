@@ -21,7 +21,7 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "rector/rector": "^2.0",
         "szepeviktor/phpstan-wordpress": "^2.0",
-        "wp-phpunit/wp-phpunit": "^6.0",
+        "wp-phpunit/wp-phpunit": "^7.1",
         "yoast/phpunit-polyfills": "^3.0"
     },
     "autoload": {
