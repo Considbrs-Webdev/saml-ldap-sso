@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Providers;
+namespace Signclave\Providers;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Container;
+use Signclave\Container;
 
 /**
  * Contract for registering and booting plugin services.

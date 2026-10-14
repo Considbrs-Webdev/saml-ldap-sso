@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Ldap;
+namespace Signclave\Ldap;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\AuthFailureReason;
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Users\UserManager;
+use Signclave\Auth\AuthFailureReason;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
+use Signclave\Users\UserManager;
 use WP_Error;
 use WP_User;
 

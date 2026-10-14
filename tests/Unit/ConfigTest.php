@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use function SamlLdapSso\config;
+use function Signclave\config;
 
 it( 'reads app.name from config', function () {
-	expect( config( 'app.name' ) )->toBe( 'saml-ldap-sso' );
+	expect( config( 'app.name' ) )->toBe( 'signclave-sso' );
 } );
 
 it( 'returns default for unknown keys', function () {
@@ -13,5 +13,5 @@ it( 'returns default for unknown keys', function () {
 } );
 
 it( 'reads option_key', function () {
-	expect( config( 'app.option_key' ) )->toBe( 'sls_options' );
+	expect( config( 'app.option_key' ) )->toBe( 'sc_options' );
 } );

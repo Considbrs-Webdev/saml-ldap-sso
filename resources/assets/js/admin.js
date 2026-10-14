@@ -47,9 +47,9 @@ import '../scss/admin.scss';
 	}
 
 	function setButtonsDisabled(disabled) {
-		var quickBtn = byId('sls-test-ldap-quick');
-		var ldapBtn = byId('sls-test-ldap-auth');
-		var ssoBtn = byId('sls-test-sso');
+		var quickBtn = byId('sc-test-ldap-quick');
+		var ldapBtn = byId('sc-test-ldap-auth');
+		var ssoBtn = byId('sc-test-sso');
 		if (quickBtn) {
 			quickBtn.disabled = disabled;
 		}
@@ -62,8 +62,8 @@ import '../scss/admin.scss';
 	}
 
 	function runTest(action, nonce, label, boxId, mode) {
-		var username = byId('sls_test_username') ? byId('sls_test_username').value : '';
-		var password = byId('sls_test_password') ? byId('sls_test_password').value : '';
+		var username = byId('sc_test_username') ? byId('sc_test_username').value : '';
+		var password = byId('sc_test_password') ? byId('sc_test_password').value : '';
 		appendLog(boxId, '', true);
 		setButtonsDisabled(true);
 		var stopSpinner = startSpinner(boxId, label);
@@ -75,7 +75,7 @@ import '../scss/admin.scss';
 		data.append('password', password);
 		data.append('mode', mode || 'auth');
 
-		fetch(slsAdmin.ajaxUrl, {
+		fetch(scAdmin.ajaxUrl, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			body: data.toString()
@@ -111,9 +111,9 @@ import '../scss/admin.scss';
 	}
 
 	function wireUserFilterByDirectoryType() {
-		var dirSelect = document.querySelector('select[name="sls_options[ldap][directory_type]"]');
-		var filterInput = byId('sls-user-filter');
-		var helper = byId('sls-user-filter-help');
+		var dirSelect = document.querySelector('select[name="sc_options[ldap][directory_type]"]');
+		var filterInput = byId('sc-user-filter');
+		var helper = byId('sc-user-filter-help');
 		if (!dirSelect || !filterInput || !helper) {
 			return;
 		}
@@ -144,8 +144,8 @@ import '../scss/admin.scss';
 	}
 
 	function wireCopyMetadata() {
-		var copyBtn = byId('sls-copy-metadata');
-		var preview = byId('sls-metadata-preview');
+		var copyBtn = byId('sc-copy-metadata');
+		var preview = byId('sc-metadata-preview');
 		if (!copyBtn || !preview) {
 			return;
 		}
@@ -158,7 +158,7 @@ import '../scss/admin.scss';
 
 			function markCopied() {
 				var original = copyBtn.textContent;
-				copyBtn.textContent = (window.slsAdmin && slsAdmin.copied) ? slsAdmin.copied : 'Copied';
+				copyBtn.textContent = (window.scAdmin && scAdmin.copied) ? scAdmin.copied : 'Copied';
 				window.setTimeout(function () {
 					copyBtn.textContent = original;
 				}, 1500);
@@ -182,25 +182,25 @@ import '../scss/admin.scss';
 	}
 
 	document.addEventListener('DOMContentLoaded', function () {
-		var quickBtn = byId('sls-test-ldap-quick');
-		var ldapBtn = byId('sls-test-ldap-auth');
-		var ssoBtn = byId('sls-test-sso');
+		var quickBtn = byId('sc-test-ldap-quick');
+		var ldapBtn = byId('sc-test-ldap-auth');
+		var ssoBtn = byId('sc-test-sso');
 
 		if (quickBtn) {
 			quickBtn.addEventListener('click', function () {
-				runTest('sls_test_ldap', slsAdmin.ldapNonce, 'LDAP quick test', 'sls-ldap-quick-log', 'quick');
+				runTest('sc_test_ldap', scAdmin.ldapNonce, 'LDAP quick test', 'sc-ldap-quick-log', 'quick');
 			});
 		}
 
 		if (ldapBtn) {
 			ldapBtn.addEventListener('click', function () {
-				runTest('sls_test_ldap', slsAdmin.ldapNonce, 'LDAP auth test', 'sls-tech-log', 'auth');
+				runTest('sc_test_ldap', scAdmin.ldapNonce, 'LDAP auth test', 'sc-tech-log', 'auth');
 			});
 		}
 
 		if (ssoBtn) {
 			ssoBtn.addEventListener('click', function () {
-				runTest('sls_test_sso', slsAdmin.ssoNonce, 'SSO test', 'sls-tech-log', 'auth');
+				runTest('sc_test_sso', scAdmin.ssoNonce, 'SSO test', 'sc-tech-log', 'auth');
 			});
 		}
 

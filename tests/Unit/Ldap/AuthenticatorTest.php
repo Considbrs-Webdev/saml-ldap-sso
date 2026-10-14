@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Ldap\Authenticator;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\FrozenClock;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Support\RateLimiter;
-use SamlLdapSso\Tests\Support\FakeLdapClient;
-use SamlLdapSso\Tests\Support\OptionStore;
-use SamlLdapSso\Users\RoleMapper;
-use SamlLdapSso\Users\UserManager;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Ldap\Authenticator;
+use Signclave\Ldap\Connection;
+use Signclave\Ldap\UserLookup;
+use Signclave\Settings\Options;
+use Signclave\Support\FrozenClock;
+use Signclave\Support\Logger;
+use Signclave\Support\RateLimiter;
+use Signclave\Tests\Support\FakeLdapClient;
+use Signclave\Tests\Support\OptionStore;
+use Signclave\Users\RoleMapper;
+use Signclave\Users\UserManager;
 
 it('never treats an empty password as a successful bind', function () {
     $ldap = new FakeLdapClient();
@@ -37,7 +37,7 @@ it('never treats an empty password as a successful bind', function () {
     $stored['ldap']['base_dn'] = 'ou=users,o=example';
     $stored['ldap']['bind_user'] = 'cn=ldap-service,ou=ldap,ou=system,o=example';
     $stored['ldap']['bind_password_encrypted'] = $options->encryptSecret('bind-secret');
-    OptionStore::seed(['sls_options' => $stored]);
+    OptionStore::seed(['sc_options' => $stored]);
     $options = new Options();
     $users = new UserManager(new RoleMapper($options), new Logger($options), $options, new FrozenClock(1));
     $auth = new Authenticator(

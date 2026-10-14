@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Admin\SettingsPage;
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Saml\Metadata;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Support\RateLimiter;
-use SamlLdapSso\Support\View;
-use SamlLdapSso\Tests\Support\OptionStore;
+use Signclave\Admin\SettingsPage;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Saml\Metadata;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
+use Signclave\Support\RateLimiter;
+use Signclave\Support\View;
+use Signclave\Tests\Support\OptionStore;
 
 beforeEach(function () {
     OptionStore::reset();
@@ -60,7 +60,7 @@ beforeEach(function () {
     }
 });
 
-function slsSettingsPage(): SettingsPage
+function scSettingsPage(): SettingsPage
 {
     $options = new Options();
     $logger = new Logger($options);
@@ -80,12 +80,12 @@ it('forces unchecked checkboxes to false when saving the settings form', functio
     $stored['general']['auto_sso'] = true;
     $stored['general']['password_bypass_key'] = 'kept-bypass-key-32-chars-xxxxxx';
     $stored['ldap']['enabled'] = true;
-    OptionStore::seed(['sls_options' => $stored]);
+    OptionStore::seed(['sc_options' => $stored]);
 
-    $_POST['option_page'] = 'sls';
-    $_POST['sls_role_mappings'] = '';
+    $_POST['option_page'] = 'sc';
+    $_POST['sc_role_mappings'] = '';
 
-    $result = slsSettingsPage()->sanitizeOptions([
+    $result = scSettingsPage()->sanitizeOptions([
         'general' => [
             'default_role' => 'subscriber',
         ],
@@ -102,13 +102,13 @@ it('keeps the stored bind secret when the password field is empty', function () 
     $stored = $options->defaults();
     $stored['general']['password_bypass_key'] = 'kept-bypass-key-32-chars-xxxxxx';
     $stored['ldap']['bind_password_encrypted'] = $secret;
-    OptionStore::seed(['sls_options' => $stored]);
+    OptionStore::seed(['sc_options' => $stored]);
 
-    $_POST['option_page'] = 'sls';
-    $_POST['sls_bind_password'] = '';
-    $_POST['sls_role_mappings'] = '';
+    $_POST['option_page'] = 'sc';
+    $_POST['sc_bind_password'] = '';
+    $_POST['sc_role_mappings'] = '';
 
-    $result = slsSettingsPage()->sanitizeOptions([
+    $result = scSettingsPage()->sanitizeOptions([
         'ldap' => [
             'bind_user' => 'cn=svc,o=org',
         ],

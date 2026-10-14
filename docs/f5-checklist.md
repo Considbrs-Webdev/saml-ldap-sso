@@ -29,7 +29,7 @@ These match the plugin defaults. They do **not** need to be re-discovered on sta
 8. Certificate rotation with primary + secondary X.509 configured, no outage.
 9. LDAP down: existing user can sign in via SAML; a new user is rejected (`LdapVerificationFailed`).
 10. Emergency local login while SSO is on.
-11. `wp sls sso disable` — verify before it is needed in an incident.
+11. `wp signclave sso disable` — verify before it is needed in an incident.
 12. Wrong IdP certificate → login rejected, audit log shows the reason.
 13. Reverse proxy: HTTPS detection correct with and without **Trust proxy HTTPS headers**.
 14. Capture one sanitized F5 `SAMLResponse`, re-sign with the test key, and check it in as a fixture.

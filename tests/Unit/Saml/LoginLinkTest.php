@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Tests\Support\HandlerFactory;
+use Signclave\Tests\Support\HandlerFactory;
 
 it('shows a Log in with SSO button on wp-login when auto-SSO is off', function () {
     $factory = new HandlerFactory();
@@ -11,9 +11,9 @@ it('shows a Log in with SSO button on wp-login when auto-SSO is off', function (
     $factory->make()->renderLoginSsoButton();
     $html = (string) ob_get_clean();
 
-    expect($html)->toContain('sls-sso-login')
+    expect($html)->toContain('sc-sso-login')
         ->and($html)->toContain('button-primary')
-        ->and($html)->toContain('sls_saml=login')
+        ->and($html)->toContain('sc_saml=login')
         ->and($html)->toContain('Log in with SSO');
 });
 
@@ -53,8 +53,8 @@ it('enqueues login styles and script when the SSO button is shown', function () 
     $factory->seedOptions(['general' => ['auto_sso' => false]]);
     $factory->make()->enqueueLoginStyles();
 
-    expect($GLOBALS['sls_test_inline_styles']['login'][0] ?? '')->toContain('.sls-sso-login')
-        ->and($GLOBALS['sls_test_inline_scripts']['sls-login-sso'][0] ?? '')->toContain('loginform');
+    expect($GLOBALS['sc_test_inline_styles']['login'][0] ?? '')->toContain('.sc-sso-login')
+        ->and($GLOBALS['sc_test_inline_scripts']['sc-login-sso'][0] ?? '')->toContain('loginform');
 });
 
 it('redirects wp-login to the IdP when auto-SSO is on', function () {
@@ -63,8 +63,8 @@ it('redirects wp-login to the IdP when auto-SSO is on', function () {
     try {
         $factory->make()->autoRedirectToSso();
         expect(false)->toBeTrue('Expected IdP redirect');
-    } catch (SamlLdapSso\Tests\Support\RedirectException $e) {
-        expect($e->location)->toContain('sls_saml=login');
+    } catch (Signclave\Tests\Support\RedirectException $e) {
+        expect($e->location)->toContain('sc_saml=login');
     }
 });
 
@@ -88,7 +88,7 @@ it('does not auto-redirect an emergency password bypass request', function () {
         ],
     ]);
     $_GET['password'] = '1';
-    $_GET['sls_key'] = 'bypass-secret-key';
+    $_GET['sc_key'] = 'bypass-secret-key';
     $factory->make()->autoRedirectToSso();
     expect(true)->toBeTrue();
 });

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Exception;
+namespace Signclave\Exception;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\AuthFailureReason;
+use Signclave\Auth\AuthFailureReason;
 
 /**
  * SAML assertion failed validation or policy checks.
  */
-final class InvalidAssertion extends SlsException
+final class InvalidAssertion extends ScException
 {
     /**
      * @param AuthFailureReason    $reason  Mapped authentication failure reason.

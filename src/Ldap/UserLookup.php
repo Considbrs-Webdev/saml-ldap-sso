@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Ldap;
+namespace Signclave\Ldap;
 
 if (! defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\AuthFailureReason;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
+use Signclave\Auth\AuthFailureReason;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
 
 /**
  * Directory search for a user (service bind, then filter).

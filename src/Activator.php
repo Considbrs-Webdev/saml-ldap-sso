@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso;
+namespace Signclave;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
 
 /**
  * Plugin activation: log directory, log filenames, and emergency bypass key.
@@ -31,8 +31,9 @@ final class Activator
      */
     public static function scheduleLogPrune(): void
     {
-        if (!wp_next_scheduled('sls_prune_logs')) {
-            wp_schedule_event(time(), 'daily', 'sls_prune_logs');
+        wp_clear_scheduled_hook('sls_prune_logs');
+        if (!wp_next_scheduled('sc_prune_logs')) {
+            wp_schedule_event(time(), 'daily', 'sc_prune_logs');
         }
     }
 
@@ -46,7 +47,7 @@ final class Activator
             return;
         }
 
-        $dir = trailingslashit((string) $upload['basedir']) . 'saml-ldap-sso';
+        $dir = trailingslashit((string) $upload['basedir']) . 'signclave-sso';
         if (!file_exists($dir)) {
             wp_mkdir_p($dir);
         }
@@ -69,11 +70,11 @@ final class Activator
             $changed = true;
         }
         if ('' === (string) ($options['general']['log_file'] ?? '')) {
-            $options['general']['log_file'] = Logger::randomLogFilename('sls');
+            $options['general']['log_file'] = Logger::randomLogFilename('sc');
             $changed = true;
         }
         if ('' === (string) ($options['general']['audit_log_file'] ?? '')) {
-            $options['general']['audit_log_file'] = Logger::randomLogFilename('sls-audit');
+            $options['general']['audit_log_file'] = Logger::randomLogFilename('sc-audit');
             $changed = true;
         }
 

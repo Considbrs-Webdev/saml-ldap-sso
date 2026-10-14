@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Assets;
+namespace Signclave\Assets;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use function SamlLdapSso\config;
+use function Signclave\config;
 
 /**
  * Reads Vite build manifest from dist/.vite/manifest.json.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Saml;
+namespace Signclave\Saml;
 
 if (!defined('ABSPATH')) {
     exit;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Tests\Support;
+namespace Signclave\Tests\Support;
 
 /**
  * In-memory WordPress option store for unit tests.
@@ -33,5 +33,10 @@ final class OptionStore
     public static function set(string $key, mixed $value): void
     {
         self::$options[$key] = $value;
+    }
+
+    public static function delete(string $key): void
+    {
+        unset(self::$options[$key]);
     }
 }

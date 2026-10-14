@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Saml;
+namespace Signclave\Saml;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,8 +11,8 @@ if (!defined('ABSPATH')) {
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use SamlLdapSso\Vendor\RobRichards\XMLSecLibs\XMLSecurityDSig;
-use SamlLdapSso\Vendor\RobRichards\XMLSecLibs\XMLSecurityKey;
+use Signclave\Vendor\RobRichards\XMLSecLibs\XMLSecurityDSig;
+use Signclave\Vendor\RobRichards\XMLSecLibs\XMLSecurityKey;
 use Throwable;
 
 /**

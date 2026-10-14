@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Tests\Support\OptionStore;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
+use Signclave\Tests\Support\OptionStore;
 
 beforeEach(function () {
     OptionStore::reset();
@@ -40,15 +40,15 @@ beforeEach(function () {
 });
 
 it('removes log lines older than the retention window', function () {
-    $log = 'sls-prune-unit.log';
-    $audit = 'sls-audit-prune-unit.log';
+    $log = 'sc-prune-unit.log';
+    $audit = 'sc-audit-prune-unit.log';
     $options = new Options();
     $stored = $options->defaults();
     $stored['general']['log_file'] = $log;
     $stored['general']['audit_log_file'] = $audit;
-    OptionStore::seed(['sls_options' => $stored]);
+    OptionStore::seed(['sc_options' => $stored]);
 
-    $dir = trailingslashit(sys_get_temp_dir()) . 'saml-ldap-sso';
+    $dir = trailingslashit(sys_get_temp_dir()) . 'signclave-sso';
     wp_mkdir_p($dir);
     $path = trailingslashit($dir) . $log;
     $old = '[2020-01-01T00:00:00+00:00] INFO old-line {}';

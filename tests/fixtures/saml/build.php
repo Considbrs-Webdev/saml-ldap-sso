@@ -14,35 +14,35 @@ declare(strict_types=1);
 require dirname(__DIR__, 3) . '/vendor/autoload.php';
 require dirname(__DIR__, 3) . '/vendor-prefixed/autoload.php';
 
-use SamlLdapSso\Vendor\RobRichards\XMLSecLibs\XMLSecurityDSig;
-use SamlLdapSso\Vendor\RobRichards\XMLSecLibs\XMLSecurityKey;
+use Signclave\Vendor\RobRichards\XMLSecLibs\XMLSecurityDSig;
+use Signclave\Vendor\RobRichards\XMLSecLibs\XMLSecurityKey;
 
 $dir = __DIR__;
 $privateKey = (string) file_get_contents($dir . '/idp.key');
 $otherKey = (string) file_get_contents($dir . '/other.key');
 $certPem = (string) file_get_contents($dir . '/idp.crt');
 
-const SLS_FIXTURE_ISSUE = '2024-06-15T12:00:00Z';
-const SLS_FIXTURE_NOT_BEFORE = '2024-06-15T11:59:00Z';
-const SLS_FIXTURE_NOT_AFTER = '2024-06-15T13:00:00Z';
+const SC_FIXTURE_ISSUE = '2024-06-15T12:00:00Z';
+const SC_FIXTURE_NOT_BEFORE = '2024-06-15T11:59:00Z';
+const SC_FIXTURE_NOT_AFTER = '2024-06-15T13:00:00Z';
 
 /**
  * @param array<string, mixed> $opts
  */
 function buildResponse(array $opts): string
 {
-    $issueInstant = (string) ($opts['issueInstant'] ?? SLS_FIXTURE_ISSUE);
-    $notBefore = (string) ($opts['notBefore'] ?? SLS_FIXTURE_NOT_BEFORE);
+    $issueInstant = (string) ($opts['issueInstant'] ?? SC_FIXTURE_ISSUE);
+    $notBefore = (string) ($opts['notBefore'] ?? SC_FIXTURE_NOT_BEFORE);
     $notOnOrAfter = array_key_exists('notOnOrAfter', $opts)
         ? (string) $opts['notOnOrAfter']
-        : SLS_FIXTURE_NOT_AFTER;
+        : SC_FIXTURE_NOT_AFTER;
     $nameIdFormat = (string) ($opts['nameIdFormat'] ?? 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified');
     $nameId = (string) ($opts['nameId'] ?? 'alice');
     $assertionId = (string) ($opts['assertionId'] ?? '_assertion1');
     $responseId = (string) ($opts['responseId'] ?? '_response1');
     $issuer = (string) ($opts['issuer'] ?? 'https://idp.example.test/realms/test');
     $audience = (string) ($opts['audience'] ?? 'https://sp.example.test/');
-    $destination = (string) ($opts['destination'] ?? 'https://sp.example.test/?sls_saml=acs');
+    $destination = (string) ($opts['destination'] ?? 'https://sp.example.test/?sc_saml=acs');
     $recipient = (string) ($opts['recipient'] ?? $destination);
     $inResponseTo = array_key_exists('inResponseTo', $opts) ? (string) $opts['inResponseTo'] : '_req1';
     $status = (string) ($opts['status'] ?? 'urn:oasis:names:tc:SAML:2.0:status:Success');
@@ -220,8 +220,8 @@ writeFixture($dir, 'wrong-audience.xml', signXml(buildResponse([
 ]), $privateKey, 'assertion'));
 
 writeFixture($dir, 'wrong-destination.xml', signXml(buildResponse([
-    'destination' => 'https://evil.example.test/?sls_saml=acs',
-    'recipient' => 'https://evil.example.test/?sls_saml=acs',
+    'destination' => 'https://evil.example.test/?sc_saml=acs',
+    'recipient' => 'https://evil.example.test/?sc_saml=acs',
 ]), $privateKey, 'assertion'));
 
 writeFixture($dir, 'status-responder.xml', signXml(buildResponse([
@@ -285,7 +285,7 @@ XML);
 writeFixture($dir, 'keycloak-lab-structure.xml', <<<XML
 <?xml version="1.0"?>
 <!-- Structural reference only: Keycloak-shaped Response. Signature is not valid. -->
-<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_lab" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?sls_saml=acs">
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_lab" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?sc_saml=acs">
   <saml:Issuer>https://idp.example.test/realms/test</saml:Issuer>
   <samlp:Status><samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/></samlp:Status>
   <saml:Assertion ID="_lab-assertion" Version="2.0" IssueInstant="2024-06-15T12:00:00Z">

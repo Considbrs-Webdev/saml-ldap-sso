@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso;
+namespace Signclave;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use SamlLdapSso\Support\Config;
+use Signclave\Support\Config;
 
 /**
  * Optional injectable Config for tests; null = read PHP files directly.

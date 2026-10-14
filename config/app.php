@@ -7,8 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'name'       => 'saml-ldap-sso',
-	'textdomain' => 'saml-ldap-sso',
-	'version'    => defined( 'SLS_VERSION' ) ? SLS_VERSION : '0.0.0',
-	'option_key' => 'sls_options',
+	'name'       => 'signclave-sso',
+	'textdomain' => 'signclave-sso',
+	'version'    => defined( 'SC_VERSION' ) ? SC_VERSION : '0.0.0',
+	'option_key' => 'sc_options',
 );

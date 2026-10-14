@@ -2,7 +2,7 @@
 /**
  * Prevent directory listing.
  *
- * @package SAML_LDAP_SSO
+ * @package Signclave
  */
 
 defined( 'ABSPATH' ) || exit;

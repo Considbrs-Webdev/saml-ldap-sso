@@ -1,6 +1,6 @@
-=== SAML LDAP SSO ===
+=== Signclave – SSO for SAML and LDAP ===
 Contributors: considadam
-Tags: saml, ldap, sso, security, authentication
+Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
@@ -26,9 +26,9 @@ Features:
 
 == Installation ==
 
-1. Upload `saml-ldap-sso` to `/wp-content/plugins/`.
+1. Upload `signclave-sso` to `/wp-content/plugins/`.
 2. Activate the plugin.
-3. Configure SAML (and optionally LDAP) under **Settings → SAML LDAP SSO**.
+3. Configure SAML (and optionally LDAP) under **Settings → Signclave SSO**.
 4. Import SP metadata in your IdP (e.g. F5 APM).
 5. Copy the **Emergency local login** URL from Security settings.
 
@@ -38,7 +38,7 @@ This plugin follows WordPress and OWASP-oriented practices:
 
 * SAML signatures verified only against the configured IdP X.509 certificate (pinned).
 * Strict SAML validation (audience, destination, issuer, InResponseTo) enabled by default.
-* Emergency local login requires a secret key (`?password=1&sls_key=...`), not a public flag.
+* Emergency local login requires a secret key (`?password=1&sc_key=...`), not a public flag.
 * Proxy HTTPS headers are ignored unless explicitly enabled.
 * Account linking by email is off by default.
 * LDAP bind passwords encrypted at rest (AES-256-GCM).
@@ -51,7 +51,7 @@ This plugin follows WordPress and OWASP-oriented practices:
 
 = Where are the settings? =
 
-**Settings → SAML LDAP SSO** (`options-general.php?page=sls-settings`). There is no top-level admin menu.
+**Settings → Signclave SSO** (`options-general.php?page=sc-settings`). There is no top-level admin menu.
 
 = How do local WordPress admins log in when SSO is enabled? =
 
@@ -71,11 +71,11 @@ Enable **Trust proxy HTTPS headers** only if the proxy is trusted and strips cli
 
 = How do I hide the plugin log directory on Nginx? =
 
-Apache gets `.htaccess` automatically. On Nginx, deny `wp-content/uploads/saml-ldap-sso/` in the server block. See `docs/instructions.md` in the plugin folder.
+Apache gets `.htaccess` automatically. On Nginx, deny `wp-content/uploads/signclave-sso/` in the server block. See `docs/instructions.md` in the plugin folder.
 
 = What if wp-admin is locked out? =
 
-From the WordPress root, with the plugin active: `wp sls sso disable` turns off auto-redirect to the IdP. `wp sls rotate-key` prints a new emergency login URL. Full command list is in `docs/instructions.md`.
+From the WordPress root, with the plugin active: `wp signclave sso disable` turns off auto-redirect to the IdP. `wp signclave rotate-key` prints a new emergency login URL. Full command list is in `docs/instructions.md`.
 
 = Where is the F5 / eDirectory profile documented? =
 
@@ -85,12 +85,12 @@ From the WordPress root, with the plugin active: `wp sls sso disable` turns off 
 
 These four filters are the public extension API (signatures will not change in patch releases):
 
-* `sls_map_attributes` — `( array $mapped, array $rawAttrs )`. `$mapped` keys: `username`, `email`, `first`, `last`, `groups`, `nameId`. Runs after SAML attribute extraction, before LDAP enrich. `nameId` is informational (identity stays the signed assertion NameID).
-* `sls_user_roles` — `( string[] $roles, WP_User $user, string[] $groups, string $source )`. Last word on roles after group mapping.
-* `sls_allow_login` — `( true|WP_Error $allow, WP_User $user, array $context )`. Return a `WP_Error` to reject a valid SAML assertion before the auth cookie is set.
-* `sls_authn_request` — `( string $xml, array $saml )`. Adjust the outbound AuthnRequest XML before it is POSTed to the IdP.
+* `sc_map_attributes` — `( array $mapped, array $rawAttrs )`. `$mapped` keys: `username`, `email`, `first`, `last`, `groups`, `nameId`. Runs after SAML attribute extraction, before LDAP enrich. `nameId` is informational (identity stays the signed assertion NameID).
+* `sc_user_roles` — `( string[] $roles, WP_User $user, string[] $groups, string $source )`. Last word on roles after group mapping.
+* `sc_allow_login` — `( true|WP_Error $allow, WP_User $user, array $context )`. Return a `WP_Error` to reject a valid SAML assertion before the auth cookie is set.
+* `sc_authn_request` — `( string $xml, array $saml )`. Adjust the outbound AuthnRequest XML before it is POSTed to the IdP.
 
-`sls_trust_proxy_headers` remains available for proxy HTTPS detection.
+`sc_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
 
@@ -120,14 +120,14 @@ These four filters are the public extension API (signatures will not change in p
 = 0.1.9 =
 * Tests: Pest Unit + Security, PHPStan level 8, type coverage 100 %, GitHub Actions (PHP 8.2/8.4).
 * SAML: reject transient NameID; unspecified remains the happy path (F5 profile).
-* Roles: do not map slugs missing from `wp_roles()`. Uninstall deletes `sls_*` transients.
+* Roles: do not map slugs missing from `wp_roles()`. Uninstall deletes `sc_*` transients.
 * Docs: F5 checklist and default attribute/NameID profile. Captured F5 XML fixture still deferred.
 
 = 0.1.8 =
 * Settings API (`options.php`) and menu under **Settings** (not a top-level item).
 * i18n: POT + Swedish `sv_SE`; `npm run translate*`.
-* Public filters: `sls_map_attributes`, `sls_user_roles`, `sls_allow_login`, `sls_authn_request`.
-* WP-CLI: `wp sls sso`, `rotate-key`, `test-ldap`, `test-saml`, `doctor`.
+* Public filters: `sc_map_attributes`, `sc_user_roles`, `sc_allow_login`, `sc_authn_request`.
+* WP-CLI: `wp signclave sso`, `rotate-key`, `test-ldap`, `test-saml`, `doctor`.
 * Daily log retention (default 90 days), Site Health tests, privacy/threat-model/F5 docs.
 
 = 0.1.7 =
@@ -138,7 +138,7 @@ These four filters are the public extension API (signatures will not change in p
 * Emergency login POST preserves bypass key; IdP-initiated SSO opt-in (off by default).
 
 = 0.1.6 =
-* Internal architecture: PSR-4 (`SamlLdapSso\`), config helpers, instance DI, Vite-built admin assets in `dist/`. Login behavior unchanged from 0.1.5.
+* Internal architecture: PSR-4 (`Signclave\`), config helpers, instance DI, Vite-built admin assets in `dist/`. Login behavior unchanged from 0.1.5.
 
 = 0.1.5 =
 * Version bump.

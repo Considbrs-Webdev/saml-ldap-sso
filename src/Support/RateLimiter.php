@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Support;
+namespace Signclave\Support;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Settings\Options;
+use Signclave\Settings\Options;
 
 /**
  * Transient-based lockout for emergency password bypass.
@@ -84,6 +84,6 @@ final class RateLimiter
     {
         $fingerprint = hash('sha256', strtolower($scope . '|' . $username . '|' . $ip));
 
-        return 'sls_' . $kind . '_' . substr($fingerprint, 0, 32);
+        return 'sc_' . $kind . '_' . substr($fingerprint, 0, 32);
     }
 }

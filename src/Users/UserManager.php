@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Users;
+namespace Signclave\Users;
 
 if (! defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\AuthFailureReason;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Clock;
-use SamlLdapSso\Support\Logger;
+use Signclave\Auth\AuthFailureReason;
+use Signclave\Settings\Options;
+use Signclave\Support\Clock;
+use Signclave\Support\Logger;
 use WP_Error;
 use WP_User;
 
@@ -65,17 +65,7 @@ final class UserManager
             return null;
         }
 
-        $users = get_users(
-            [
-                'meta_key' => 'sls_nameid', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- unique NameID usermeta lookup, number=1.
-                'meta_value' => $nameId, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- unique NameID usermeta lookup, number=1.
-                'number' => 1,
-                'count_total' => false,
-            ]
-        );
-        $user = is_array($users) ? ($users[0] ?? null) : null;
-
-        return $user instanceof WP_User ? $user : null;
+        return $this->usersByMeta('sc_nameid', $nameId);
     }
 
     /**
@@ -217,8 +207,8 @@ final class UserManager
             return AuthFailureReason::InvalidUser->toWpError();
         }
 
-        update_user_meta($user->ID, 'sls_source', $source);
-        update_user_meta($user->ID, 'sls_last_login', $this->clock->now());
+        $this->writeUserMeta($user->ID, 'source', $source);
+        $this->writeUserMeta($user->ID, 'last_login', $this->clock->now());
 
         return $user;
     }
@@ -226,7 +216,7 @@ final class UserManager
     /**
      * Apply group-to-role mappings, optionally revoking roles that no longer match.
      *
-     * Only roles this plugin granted (tracked in `sls_managed_roles`) are ever
+     * Only roles this plugin granted (tracked in `sc_managed_roles`) are ever
      * revoked, and never in a way that leaves the site without an administrator.
      *
      * @param WP_User      $user   User to update.
@@ -238,7 +228,7 @@ final class UserManager
     public function applyRoleMapping(WP_User $user, array $groups, string $source): WP_User|WP_Error
     {
         $roles = $this->roleMapper->resolveRoles($groups, $source);
-        $filtered = apply_filters('sls_user_roles', $roles, $user, $groups, $source);
+        $filtered = apply_filters('sc_user_roles', $roles, $user, $groups, $source);
         if (is_array($filtered)) {
             $roles = array_values(array_filter(array_map('strval', $filtered), static fn (string $role): bool => '' !== $role));
         }
@@ -277,7 +267,7 @@ final class UserManager
         foreach ($target as $role) {
             $user->add_role($role);
         }
-        update_user_meta($user->ID, 'sls_managed_roles', array_values($target));
+        $this->writeUserMeta($user->ID, 'managed_roles', array_values($target));
 
         return $user;
     }
@@ -292,7 +282,7 @@ final class UserManager
      */
     private function revokeManagedRoles(WP_User $user, array $keep): ?WP_Error
     {
-        $managed = get_user_meta($user->ID, 'sls_managed_roles', true);
+        $managed = $this->readUserMeta($user->ID, 'managed_roles');
         $managed = is_array($managed) ? $managed : [];
         if ([] === $managed) {
             return null;
@@ -330,7 +320,7 @@ final class UserManager
             $user->remove_role($role);
         }
 
-        update_user_meta($user->ID, 'sls_managed_roles', array_values(array_unique($remaining)));
+        $this->writeUserMeta($user->ID, 'managed_roles', array_values(array_unique($remaining)));
 
         return null;
     }
@@ -468,7 +458,7 @@ final class UserManager
      */
     private function isAdoptableAccount(WP_User $user): bool
     {
-        return '' === (string) get_user_meta($user->ID, 'sls_nameid', true);
+        return ! $this->userMetaPresent($this->readUserMeta($user->ID, 'nameid'));
     }
 
     /**
@@ -481,11 +471,11 @@ final class UserManager
      */
     private function storeIdentity(WP_User $user, string $nameId, string $nameIdFormat, string $idpEntity): void
     {
-        update_user_meta($user->ID, 'sls_nameid', $nameId);
-        update_user_meta($user->ID, 'sls_nameid_format', sanitize_text_field($nameIdFormat));
-        update_user_meta($user->ID, 'sls_idp_entity', sanitize_text_field($idpEntity));
-        update_user_meta($user->ID, 'sls_source', 'saml');
-        update_user_meta($user->ID, 'sls_last_login', $this->clock->now());
+        $this->writeUserMeta($user->ID, 'nameid', $nameId);
+        $this->writeUserMeta($user->ID, 'nameid_format', sanitize_text_field($nameIdFormat));
+        $this->writeUserMeta($user->ID, 'idp_entity', sanitize_text_field($idpEntity));
+        $this->writeUserMeta($user->ID, 'source', 'saml');
+        $this->writeUserMeta($user->ID, 'last_login', $this->clock->now());
     }
 
     /**
@@ -503,5 +493,54 @@ final class UserManager
             $update['user_email'] = $email;
         }
         wp_update_user($update);
+    }
+
+    /**
+     * Find one user stored under a NameID meta key.
+     */
+    private function usersByMeta(string $metaKey, string $nameId): ?WP_User
+    {
+        $users = get_users(
+            [
+                'meta_key' => $metaKey, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- unique NameID usermeta lookup, number=1.
+                'meta_value' => $nameId, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- unique NameID usermeta lookup, number=1.
+                'number' => 1,
+                'count_total' => false,
+            ]
+        );
+        $user = is_array($users) ? ($users[0] ?? null) : null;
+
+        return $user instanceof WP_User ? $user : null;
+    }
+
+    /**
+     * Read plugin user meta.
+     */
+    private function readUserMeta(int $userId, string $suffix): mixed
+    {
+        return get_user_meta($userId, 'sc_' . $suffix, true);
+    }
+
+    /**
+     * Write plugin user meta.
+     */
+    private function writeUserMeta(int $userId, string $suffix, mixed $value): void
+    {
+        update_user_meta($userId, 'sc_' . $suffix, $value);
+    }
+
+    /**
+     * Whether a meta value was actually stored.
+     */
+    private function userMetaPresent(mixed $value): bool
+    {
+        if (is_array($value)) {
+            return [] !== $value;
+        }
+        if (is_int($value)) {
+            return true;
+        }
+
+        return is_string($value) && '' !== $value;
     }
 }

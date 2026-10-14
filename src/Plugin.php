@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso;
+namespace Signclave;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Settings\Options;
+use Signclave\Settings\Options;
 
-use function SamlLdapSso\config;
+use function Signclave\config;
 
 /**
  * Core plugin lifecycle helpers (textdomain, upgrade, proxy SSL).
@@ -30,9 +30,9 @@ final class Plugin
      */
     public function loadTextdomain(): void
     {
-        $pluginFile = (string) config('paths.plugin_path') . 'saml-ldap-sso.php';
+        $pluginFile = (string) config('paths.plugin_path') . 'signclave-sso.php';
         load_plugin_textdomain( // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Domain Path is resources/languages; needed off wordpress.org.
-            (string) config('app.textdomain', 'saml-ldap-sso'),
+            (string) config('app.textdomain', 'signclave-sso'),
             false,
             dirname(plugin_basename($pluginFile)) . '/resources/languages'
         );
@@ -62,7 +62,7 @@ final class Plugin
         }
 
         $trust = (bool) $this->options->get('general', 'trust_proxy_headers', false);
-        $trust = (bool) apply_filters('sls_trust_proxy_headers', $trust);
+        $trust = (bool) apply_filters('sc_trust_proxy_headers', $trust);
         if (!$trust) {
             return;
         }

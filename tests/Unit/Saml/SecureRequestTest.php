@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Saml\Handler;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Tests\Support\OptionStore;
+use Signclave\Saml\Handler;
+use Signclave\Settings\Options;
+use Signclave\Tests\Support\OptionStore;
 
 beforeEach(function () {
     OptionStore::reset();
@@ -30,7 +30,7 @@ beforeEach(function () {
 
 it('ignores X-Forwarded-Proto when trust_proxy_headers is off', function () {
     OptionStore::seed([
-        'sls_options' => [
+        'sc_options' => [
             'general' => ['trust_proxy_headers' => false],
         ],
     ]);
@@ -52,7 +52,7 @@ it('ignores X-Forwarded-Proto when trust_proxy_headers is off', function () {
 
 it('honours X-Forwarded-Proto when trust_proxy_headers is on', function () {
     OptionStore::seed([
-        'sls_options' => [
+        'sc_options' => [
             'general' => ['trust_proxy_headers' => true],
         ],
     ]);

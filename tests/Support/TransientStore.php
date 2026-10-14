@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Tests\Support;
+namespace Signclave\Tests\Support;
 
 /**
  * In-memory WordPress transient store for unit tests.

@@ -1,27 +1,30 @@
 <?php
 /**
- * Uninstall: delete sls_options and upload log files.
+ * Uninstall: delete plugin options and upload log files.
  *
- * @package SAML_LDAP_SSO
+ * @package Signclave
  */
 
 defined( 'ABSPATH' ) || exit;
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 ( static function (): void {
+	wp_clear_scheduled_hook( 'sc_prune_logs' );
 	wp_clear_scheduled_hook( 'sls_prune_logs' );
 
-	$sls_options = get_option( 'sls_options', array() );
-	$sls_general = is_array( $sls_options ) && isset( $sls_options['general'] ) && is_array( $sls_options['general'] )
-		? $sls_options['general']
-		: array();
-
-	delete_option( 'sls_options' );
+	$generals = array();
+	foreach ( array( 'sc_options', 'sls_options' ) as $option_key ) {
+		$stored = get_option( $option_key, array() );
+		if ( is_array( $stored ) && isset( $stored['general'] ) && is_array( $stored['general'] ) ) {
+			$generals[] = $stored['general'];
+		}
+		delete_option( $option_key );
+	}
 
 	global $wpdb;
 	if ( $wpdb instanceof wpdb ) {
-		$like_transient = $wpdb->esc_like( '_transient_sls_' ) . '%';
-		$like_timeout   = $wpdb->esc_like( '_transient_timeout_sls_' ) . '%';
+		$like_transient = $wpdb->esc_like( '_transient_sc_' ) . '%';
+		$like_timeout   = $wpdb->esc_like( '_transient_timeout_sc_' ) . '%';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- uninstall must drop all plugin transients.
 		$wpdb->query(
 			$wpdb->prepare(
@@ -37,26 +40,25 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 		return;
 	}
 
-	$dir = trailingslashit( $upload['basedir'] ) . 'saml-ldap-sso';
+	$dir = trailingslashit( $upload['basedir'] ) . 'signclave-sso';
 	if ( ! is_dir( $dir ) ) {
 		return;
 	}
 
-	$files = array( 'sls.log', 'sls-audit.log', 'index.php', '.htaccess' );
-
-	// Randomized log filenames configured by the plugin.
-	foreach ( array( 'log_file', 'audit_log_file' ) as $sls_key ) {
-		$sls_name = isset( $sls_general[ $sls_key ] ) ? basename( (string) $sls_general[ $sls_key ] ) : '';
-		if ( '' !== $sls_name && preg_match( '/^sls[a-z0-9._-]*\.log$/i', $sls_name ) ) {
-			$files[] = $sls_name;
+	$files = array( 'sc.log', 'sc-audit.log', 'index.php', '.htaccess' );
+	foreach ( $generals as $general ) {
+		foreach ( array( 'log_file', 'audit_log_file' ) as $key ) {
+			$name = isset( $general[ $key ] ) ? basename( (string) $general[ $key ] ) : '';
+			if ( '' !== $name && preg_match( '/^sc[a-z0-9._-]*\.log$/i', $name ) ) {
+				$files[] = $name;
+			}
 		}
 	}
 
-	// Any stale randomized logs left behind by earlier filename rotations.
-	$sls_stale = glob( trailingslashit( $dir ) . 'sls*.log' );
-	if ( is_array( $sls_stale ) ) {
-		foreach ( $sls_stale as $sls_path ) {
-			$files[] = basename( $sls_path );
+	$stale = glob( trailingslashit( $dir ) . 'sc*.log' );
+	if ( is_array( $stale ) ) {
+		foreach ( $stale as $path ) {
+			$files[] = basename( $path );
 		}
 	}
 

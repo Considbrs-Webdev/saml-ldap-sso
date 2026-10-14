@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Providers;
+namespace Signclave\Providers;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Container;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Saml\Handler;
-use SamlLdapSso\Saml\Metadata;
-use SamlLdapSso\Saml\SignatureVerifier;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Clock;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Users\UserManager;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Container;
+use Signclave\Ldap\UserLookup;
+use Signclave\Saml\Handler;
+use Signclave\Saml\Metadata;
+use Signclave\Saml\SignatureVerifier;
+use Signclave\Settings\Options;
+use Signclave\Support\Clock;
+use Signclave\Support\Logger;
+use Signclave\Users\UserManager;
 
 /**
  * SAML metadata, signature verification, and ACS handler services.

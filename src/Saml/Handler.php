@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Saml;
+namespace Signclave\Saml;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -14,19 +14,19 @@ use DOMElement;
 use DOMNode;
 use DOMNodeList;
 use DOMXPath;
-use SamlLdapSso\Auth\AuthFailureReason;
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Exception\InvalidAssertion;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Clock;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Users\UserManager;
+use Signclave\Auth\AuthFailureReason;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Exception\InvalidAssertion;
+use Signclave\Ldap\UserLookup;
+use Signclave\Settings\Options;
+use Signclave\Support\Clock;
+use Signclave\Support\Logger;
+use Signclave\Users\UserManager;
 use Throwable;
 use WP_Error;
 use WP_User;
 
-use function SamlLdapSso\config;
+use function Signclave\config;
 
 // phpcs:disable WordPress.Security.NonceVerification -- SAML ACS/login and wp-login query routing are not WordPress forms.
 
@@ -81,7 +81,7 @@ final class Handler
             return;
         }
 
-        if (! empty($_GET['sls_saml'])) {
+        if ('' !== $this->samlRouteParam()) {
             return;
         }
 
@@ -116,9 +116,9 @@ final class Handler
         }
 
         printf(
-            '<p class="sls-sso-login" id="sls-sso-login"><a class="button button-primary button-large" href="%1$s">%2$s</a></p>',
+            '<p class="sc-sso-login" id="sc-sso-login"><a class="button button-primary button-large" href="%1$s">%2$s</a></p>',
             esc_url($this->buildLoginUrl()),
-            esc_html__('Log in with SSO', 'saml-ldap-sso')
+            esc_html__('Log in with SSO', 'signclave-sso')
         );
     }
 
@@ -133,14 +133,14 @@ final class Handler
 
         wp_add_inline_style(
             'login',
-            '.sls-sso-login{width:320px;max-width:100%;margin:16px auto 0}#login .sls-sso-login{width:100%;margin-left:0;margin-right:0}.sls-sso-login .button{display:block;width:100%;box-sizing:border-box;float:none;height:auto;text-align:center}'
+            '.sc-sso-login{width:320px;max-width:100%;margin:16px auto 0}#login .sc-sso-login{width:100%;margin-left:0;margin-right:0}.sc-sso-login .button{display:block;width:100%;box-sizing:border-box;float:none;height:auto;text-align:center}'
         );
 
-        wp_register_script('sls-login-sso', false, [], (string) config('app.version'), true);
-        wp_enqueue_script('sls-login-sso');
+        wp_register_script('sc-login-sso', false, [], (string) config('app.version'), true);
+        wp_enqueue_script('sc-login-sso');
         wp_add_inline_script(
-            'sls-login-sso',
-            'var slsForm=document.getElementById("loginform");var slsBtn=document.getElementById("sls-sso-login");if(slsForm&&slsBtn){slsForm.insertAdjacentElement("afterend",slsBtn);}'
+            'sc-login-sso',
+            'var scForm=document.getElementById("loginform");var scBtn=document.getElementById("sc-sso-login");if(scForm&&scBtn){scForm.insertAdjacentElement("afterend",scBtn);}'
         );
     }
 
@@ -175,15 +175,14 @@ final class Handler
     }
 
     /**
-     * Dispatch ?sls_saml= login, ACS, or metadata routes.
+     * Dispatch ?sc_saml= login, ACS, or metadata routes.
      */
     public function handleSamlRoutes(): void
     {
-        if (empty($_GET['sls_saml'])) {
+        $route = $this->samlRouteParam();
+        if ('' === $route) {
             return;
         }
-
-        $route = sanitize_text_field(wp_unslash((string) $_GET['sls_saml']));
         if ('login' === $route) {
             $this->samlLogin();
         } elseif ('acs' === $route) {
@@ -207,11 +206,11 @@ final class Handler
         $ssoUrl = (string) $saml['primary_sso_url'];
         $entityId = (string) $this->options->get('saml', 'sp_entity_id', site_url('/'));
         if ('' === $ssoUrl || '' === $entityId) {
-            wp_die(esc_html__('SSO is not configured.', 'saml-ldap-sso'));
+            wp_die(esc_html__('SSO is not configured.', 'signclave-sso'));
         }
 
         $requestId = '_' . wp_generate_password(22, false, false);
-        set_transient('sls_req_' . md5($requestId), 1, (int) $this->options->get('general', 'saml_request_ttl_seconds', 300));
+        set_transient('sc_req_' . md5($requestId), 1, (int) $this->options->get('general', 'saml_request_ttl_seconds', 300));
 
         $acsUrl = $this->acsUrl();
         $issue = $this->clock->formatGmt('Y-m-d\TH:i:s\Z');
@@ -223,7 +222,7 @@ final class Handler
             esc_url_raw($acsUrl),
             esc_html($entityId)
         );
-        $xml = (string) apply_filters('sls_authn_request', $xml, $saml);
+        $xml = (string) apply_filters('sc_authn_request', $xml, $saml);
 
         $relay = $this->createRelayState();
         $samlReq = base64_encode($xml);
@@ -254,7 +253,7 @@ final class Handler
                     $e->context
                 )
             );
-            wp_die(esc_html__('Invalid credentials.', 'saml-ldap-sso'));
+            wp_die(esc_html__('Invalid credentials.', 'signclave-sso'));
         } catch (Throwable $e) {
             $this->logger->security(
                 'SAML ACS rejected login.',
@@ -265,7 +264,7 @@ final class Handler
                     'line' => $e->getLine(),
                 ]
             );
-            wp_die(esc_html__('Invalid credentials.', 'saml-ldap-sso'));
+            wp_die(esc_html__('Invalid credentials.', 'signclave-sso'));
         }
     }
 
@@ -360,7 +359,7 @@ final class Handler
         }
 
         $responseId = $this->xpathString($xp, '/*[local-name()="Response"]/@ID');
-        $replayKey = 'sls_replay_' . md5($responseId);
+        $replayKey = 'sc_replay_' . md5($responseId);
         if ('' === $responseId || get_transient($replayKey)) {
             throw new InvalidAssertion(
                 AuthFailureReason::ReplayBlocked,
@@ -428,7 +427,7 @@ final class Handler
         }
 
         $mapped = apply_filters(
-            'sls_map_attributes',
+            'sc_map_attributes',
             [
                 'username' => $username,
                 'email' => $email,
@@ -485,7 +484,7 @@ final class Handler
         }
 
         $allow = apply_filters(
-            'sls_allow_login',
+            'sc_allow_login',
             true,
             $user,
             [
@@ -738,7 +737,7 @@ final class Handler
                 break;
             }
 
-            $requestKey = 'sls_req_' . md5($inResponseTo);
+            $requestKey = 'sc_req_' . md5($inResponseTo);
             if (! get_transient($requestKey)) {
                 continue;
             }
@@ -859,10 +858,22 @@ final class Handler
     private function buildLoginUrl(): string
     {
         return add_query_arg(
-            'sls_saml',
+            'sc_saml',
             'login',
             wp_login_url($this->requestedRedirectTarget())
         );
+    }
+
+    /**
+     * Read the SAML route from the current query.
+     */
+    private function samlRouteParam(): string
+    {
+        if (empty($_GET['sc_saml'])) {
+            return '';
+        }
+
+        return sanitize_text_field(wp_unslash((string) $_GET['sc_saml']));
     }
 
     /**
@@ -874,18 +885,26 @@ final class Handler
     }
 
     /**
+     * HMAC a RelayState blob.
+     */
+    private function relayMac(string $blob): string
+    {
+        $key = hash_hkdf('sha256', wp_salt('auth'), 32, 'sc-relay');
+
+        return hash_hmac('sha256', $blob, $key);
+    }
+
+    /**
      * Create a signed RelayState blob carrying the post-login redirect target.
      */
     private function createRelayState(): string
     {
         $safe = $this->requestedRedirectTarget();
         $issued = $this->clock->now();
-        $key = hash_hkdf('sha256', wp_salt('auth'), 32, 'sls-relay');
         $json = wp_json_encode(['url' => $safe, 'iat' => $issued]);
         $blob = base64_encode(is_string($json) ? $json : '');
-        $mac = hash_hmac('sha256', $blob, $key);
 
-        return $blob . '.' . $mac;
+        return $blob . '.' . $this->relayMac($blob);
     }
 
     /**
@@ -897,8 +916,8 @@ final class Handler
             return admin_url();
         }
         [$blob, $mac] = explode('.', $relay, 2);
-        $key = hash_hkdf('sha256', wp_salt('auth'), 32, 'sls-relay');
-        if (! hash_equals(hash_hmac('sha256', $blob, $key), $mac)) {
+        $valid = hash_equals($this->relayMac($blob), $mac);
+        if (! $valid) {
             return admin_url();
         }
         $decoded = json_decode((string) base64_decode($blob, true), true);
@@ -1077,22 +1096,22 @@ final class Handler
                     'redirect_host' => $urlHost,
                 ]
             );
-            wp_die(esc_html__('SSO is not configured.', 'saml-ldap-sso'));
+            wp_die(esc_html__('SSO is not configured.', 'signclave-sso'));
         }
         if (! in_array($scheme, ['http', 'https'], true)) {
-            wp_die(esc_html__('SSO is not configured.', 'saml-ldap-sso'));
+            wp_die(esc_html__('SSO is not configured.', 'signclave-sso'));
         }
 
         nocache_headers();
         header('Content-Type: text/html; charset=utf-8');
         $action = esc_url($ssoUrl);
         echo '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">';
-        echo '<title>' . esc_html__('Redirecting to sign in…', 'saml-ldap-sso') . '</title></head><body>';
-        echo '<form id="sls-saml-post" method="post" action="' . $action . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $action is esc_url().
+        echo '<title>' . esc_html__('Redirecting to sign in…', 'signclave-sso') . '</title></head><body>';
+        echo '<form id="sc-saml-post" method="post" action="' . $action . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $action is esc_url().
         echo '<input type="hidden" name="SAMLRequest" value="' . esc_attr($samlRequestB64) . '">';
         echo '<input type="hidden" name="RelayState" value="' . esc_attr($relay) . '">';
-        echo '<noscript><p><button type="submit">' . esc_html__('Continue to sign in', 'saml-ldap-sso') . '</button></p></noscript>';
-        echo '</form><script>document.getElementById("sls-saml-post").submit();</script></body></html>';
+        echo '<noscript><p><button type="submit">' . esc_html__('Continue to sign in', 'signclave-sso') . '</button></p></noscript>';
+        echo '</form><script>document.getElementById("sc-saml-post").submit();</script></body></html>';
         exit;
     }
 }

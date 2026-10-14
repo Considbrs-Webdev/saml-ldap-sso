@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Saml\SignatureVerifier;
+use Signclave\Saml\SignatureVerifier;
 
 it('never accepts a mutated assertion as a different valid payload', function () {
     $original = (string) file_get_contents(dirname(__DIR__) . '/fixtures/saml/valid-assertion.xml');

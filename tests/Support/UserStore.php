@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Tests\Support;
+namespace Signclave\Tests\Support;
 
 use WP_User;
 
@@ -71,5 +71,10 @@ final class UserStore
     public static function setMeta(int $id, string $key, mixed $value): void
     {
         self::$meta[$id][$key] = $value;
+    }
+
+    public static function deleteMeta(int $id, string $key): void
+    {
+        unset(self::$meta[$id][$key]);
     }
 }

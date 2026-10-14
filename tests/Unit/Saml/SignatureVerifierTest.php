@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Saml\SignatureVerifier;
+use Signclave\Saml\SignatureVerifier;
 
 function fixture(string $name): string
 {

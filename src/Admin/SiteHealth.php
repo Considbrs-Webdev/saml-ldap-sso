@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Admin;
+namespace Signclave\Admin;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Settings\Options;
+use Signclave\Ldap\Connection;
+use Signclave\Settings\Options;
 
 /**
  * WordPress Site Health tests for IdP certificates, LDAP, and HTTPS.
@@ -43,20 +43,20 @@ final class SiteHealth
      */
     public function registerTests(array $tests): array
     {
-        $tests['direct']['sls_idp_cert'] = [
-            'label' => __('SAML LDAP SSO: IdP certificate', 'saml-ldap-sso'),
+        $tests['direct']['sc_idp_cert'] = [
+            'label' => __('Signclave SSO: IdP certificate', 'signclave-sso'),
             'test' => [$this, 'testIdpCertificate'],
         ];
-        $tests['direct']['sls_ldap_tls'] = [
-            'label' => __('SAML LDAP SSO: LDAP TLS', 'saml-ldap-sso'),
+        $tests['direct']['sc_ldap_tls'] = [
+            'label' => __('Signclave SSO: LDAP TLS', 'signclave-sso'),
             'test' => [$this, 'testLdapTls'],
         ];
-        $tests['direct']['sls_https'] = [
-            'label' => __('SAML LDAP SSO: HTTPS', 'saml-ldap-sso'),
+        $tests['direct']['sc_https'] = [
+            'label' => __('Signclave SSO: HTTPS', 'signclave-sso'),
             'test' => [$this, 'testHttps'],
         ];
-        $tests['direct']['sls_ldap_configured'] = [
-            'label' => __('SAML LDAP SSO: LDAP configuration', 'saml-ldap-sso'),
+        $tests['direct']['sc_ldap_configured'] = [
+            'label' => __('Signclave SSO: LDAP configuration', 'signclave-sso'),
             'test' => [$this, 'testLdapConfigured'],
         ];
 
@@ -85,7 +85,7 @@ final class SiteHealth
             $pem = trim($pem);
             if ('' === $pem) {
                 if ('primary' === $label) {
-                    $issues[] = __('No primary IdP certificate is configured.', 'saml-ldap-sso');
+                    $issues[] = __('No primary IdP certificate is configured.', 'signclave-sso');
                     $worst = $this->worseStatus($worst, 'recommended');
                 }
                 continue;
@@ -95,7 +95,7 @@ final class SiteHealth
             if (!is_array($parsed) || !isset($parsed['validTo_time_t'])) {
                 $issues[] = sprintf(
                     /* translators: %s: primary or secondary */
-                    __('The %s IdP certificate could not be parsed.', 'saml-ldap-sso'),
+                    __('The %s IdP certificate could not be parsed.', 'signclave-sso'),
                     $label
                 );
                 $worst = $this->worseStatus($worst, 'recommended');
@@ -107,7 +107,7 @@ final class SiteHealth
             if ($validTo < $now) {
                 $issues[] = sprintf(
                     /* translators: 1: primary or secondary, 2: expiry date */
-                    __('The %1$s IdP certificate expired on %2$s. SSO will fail until it is replaced.', 'saml-ldap-sso'),
+                    __('The %1$s IdP certificate expired on %2$s. SSO will fail until it is replaced.', 'signclave-sso'),
                     $label,
                     $date
                 );
@@ -115,7 +115,7 @@ final class SiteHealth
             } elseif ($validTo < $warnBefore) {
                 $issues[] = sprintf(
                     /* translators: 1: primary or secondary, 2: expiry date */
-                    __('The %1$s IdP certificate expires on %2$s (within 30 days).', 'saml-ldap-sso'),
+                    __('The %1$s IdP certificate expires on %2$s (within 30 days).', 'signclave-sso'),
                     $label,
                     $date
                 );
@@ -125,17 +125,17 @@ final class SiteHealth
 
         if ('good' === $worst) {
             return $this->result(
-                'sls_idp_cert',
+                'sc_idp_cert',
                 'good',
-                __('IdP certificates are valid.', 'saml-ldap-sso'),
-                '<p>' . esc_html__('Pinned IdP certificates are present and not expiring within 30 days.', 'saml-ldap-sso') . '</p>'
+                __('IdP certificates are valid.', 'signclave-sso'),
+                '<p>' . esc_html__('Pinned IdP certificates are present and not expiring within 30 days.', 'signclave-sso') . '</p>'
             );
         }
 
         return $this->result(
-            'sls_idp_cert',
+            'sc_idp_cert',
             $worst,
-            __('IdP certificate needs attention.', 'saml-ldap-sso'),
+            __('IdP certificate needs attention.', 'signclave-sso'),
             '<p>' . esc_html(implode(' ', $issues)) . '</p>'
         );
     }
@@ -150,10 +150,10 @@ final class SiteHealth
         $ldap = $this->options->getAll()['ldap'];
         if (empty($ldap['enabled'])) {
             return $this->result(
-                'sls_ldap_tls',
+                'sc_ldap_tls',
                 'good',
-                __('LDAP is not enabled.', 'saml-ldap-sso'),
-                '<p>' . esc_html__('LDAP fallback is off; TLS for the directory is not required.', 'saml-ldap-sso') . '</p>'
+                __('LDAP is not enabled.', 'signclave-sso'),
+                '<p>' . esc_html__('LDAP fallback is off; TLS for the directory is not required.', 'signclave-sso') . '</p>'
             );
         }
 
@@ -167,18 +167,18 @@ final class SiteHealth
 
         if ([] === $plain || !empty($ldap['allow_insecure_ldap'])) {
             return $this->result(
-                'sls_ldap_tls',
+                'sc_ldap_tls',
                 'good',
-                __('LDAP hosts use TLS or insecure LDAP is explicitly allowed.', 'saml-ldap-sso'),
-                '<p>' . esc_html__('Directory hosts are ldaps://, or “Allow ldap://” is enabled for a lab environment.', 'saml-ldap-sso') . '</p>'
+                __('LDAP hosts use TLS or insecure LDAP is explicitly allowed.', 'signclave-sso'),
+                '<p>' . esc_html__('Directory hosts are ldaps://, or “Allow ldap://” is enabled for a lab environment.', 'signclave-sso') . '</p>'
             );
         }
 
         return $this->result(
-            'sls_ldap_tls',
+            'sc_ldap_tls',
             'recommended',
-            __('LDAP is enabled without ldaps://.', 'saml-ldap-sso'),
-            '<p>' . esc_html__('Use ldaps:// (or enable StartTLS on ldap://). Plaintext ldap:// without “Allow ldap://” will fail in production.', 'saml-ldap-sso') . '</p>'
+            __('LDAP is enabled without ldaps://.', 'signclave-sso'),
+            '<p>' . esc_html__('Use ldaps:// (or enable StartTLS on ldap://). Plaintext ldap:// without “Allow ldap://” will fail in production.', 'signclave-sso') . '</p>'
         );
     }
 
@@ -191,27 +191,27 @@ final class SiteHealth
     {
         if (is_ssl()) {
             return $this->result(
-                'sls_https',
+                'sc_https',
                 'good',
-                __('WordPress sees this request as HTTPS.', 'saml-ldap-sso'),
-                '<p>' . esc_html__('Secure cookies and ACS URLs can be generated correctly.', 'saml-ldap-sso') . '</p>'
+                __('WordPress sees this request as HTTPS.', 'signclave-sso'),
+                '<p>' . esc_html__('Secure cookies and ACS URLs can be generated correctly.', 'signclave-sso') . '</p>'
             );
         }
 
         if (!empty($this->options->get('general', 'trust_proxy_headers', false))) {
             return $this->result(
-                'sls_https',
+                'sc_https',
                 'good',
-                __('HTTPS is not detected locally; proxy headers are trusted.', 'saml-ldap-sso'),
-                '<p>' . esc_html__('Confirm the reverse proxy strips client-supplied X-Forwarded-* headers.', 'saml-ldap-sso') . '</p>'
+                __('HTTPS is not detected locally; proxy headers are trusted.', 'signclave-sso'),
+                '<p>' . esc_html__('Confirm the reverse proxy strips client-supplied X-Forwarded-* headers.', 'signclave-sso') . '</p>'
             );
         }
 
         return $this->result(
-            'sls_https',
+            'sc_https',
             'recommended',
-            __('WordPress does not see HTTPS.', 'saml-ldap-sso'),
-            '<p>' . esc_html__('Auth cookies may be marked insecure and the ACS URL may be http://. Terminate TLS at the web server, or enable “Trust proxy HTTPS headers” only behind a trusted reverse proxy.', 'saml-ldap-sso') . '</p>'
+            __('WordPress does not see HTTPS.', 'signclave-sso'),
+            '<p>' . esc_html__('Auth cookies may be marked insecure and the ACS URL may be http://. Terminate TLS at the web server, or enable “Trust proxy HTTPS headers” only behind a trusted reverse proxy.', 'signclave-sso') . '</p>'
         );
     }
 
@@ -224,27 +224,27 @@ final class SiteHealth
     {
         if (!$this->options->isLdapEnabled()) {
             return $this->result(
-                'sls_ldap_configured',
+                'sc_ldap_configured',
                 'good',
-                __('LDAP is not enabled.', 'saml-ldap-sso'),
-                '<p>' . esc_html__('SAML runs without directory verification.', 'saml-ldap-sso') . '</p>'
+                __('LDAP is not enabled.', 'signclave-sso'),
+                '<p>' . esc_html__('SAML runs without directory verification.', 'signclave-sso') . '</p>'
             );
         }
 
         if ($this->options->isLdapUsable()) {
             return $this->result(
-                'sls_ldap_configured',
+                'sc_ldap_configured',
                 'good',
-                __('LDAP is configured.', 'saml-ldap-sso'),
-                '<p>' . esc_html__('Host, base DN, bind user, and bind secret are present. Use diagnostics or `wp sls test-ldap` for a live bind.', 'saml-ldap-sso') . '</p>'
+                __('LDAP is configured.', 'signclave-sso'),
+                '<p>' . esc_html__('Host, base DN, bind user, and bind secret are present. Use diagnostics or `wp signclave test-ldap` for a live bind.', 'signclave-sso') . '</p>'
             );
         }
 
         return $this->result(
-            'sls_ldap_configured',
+            'sc_ldap_configured',
             'recommended',
-            __('LDAP is enabled but incomplete.', 'saml-ldap-sso'),
-            '<p>' . esc_html__('Fill in hosts, base DN, bind user, and bind password, or disable LDAP.', 'saml-ldap-sso') . '</p>'
+            __('LDAP is enabled but incomplete.', 'signclave-sso'),
+            '<p>' . esc_html__('Fill in hosts, base DN, bind user, and bind password, or disable LDAP.', 'signclave-sso') . '</p>'
         );
     }
 
@@ -259,9 +259,9 @@ final class SiteHealth
     private function result(string $test, string $status, string $label, string $html): array
     {
         $badge = match ($status) {
-            'critical' => ['label' => __('Security', 'saml-ldap-sso'), 'color' => 'red'],
-            'recommended' => ['label' => __('Security', 'saml-ldap-sso'), 'color' => 'orange'],
-            default => ['label' => __('Security', 'saml-ldap-sso'), 'color' => 'blue'],
+            'critical' => ['label' => __('Security', 'signclave-sso'), 'color' => 'red'],
+            'recommended' => ['label' => __('Security', 'signclave-sso'), 'color' => 'orange'],
+            default => ['label' => __('Security', 'signclave-sso'), 'color' => 'blue'],
         };
 
         return [

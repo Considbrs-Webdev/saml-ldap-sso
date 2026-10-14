@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Admin;
+namespace Signclave\Admin;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Saml\Metadata;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Support\View;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Saml\Metadata;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
+use Signclave\Support\View;
 
 /**
  * WordPress admin UI for plugin options (Settings API + custom markup).
@@ -49,7 +49,9 @@ final class SettingsPage
     {
         add_action('admin_menu', [$this, 'menu']);
         add_action('admin_init', [$this, 'registerSetting']);
-        add_action('admin_post_sls_download_metadata', [$this, 'handleMetadataDownload']);
+        add_action('admin_post_sc_download_metadata', [$this, 'handleMetadataDownload']);
+        add_action('added_option', [$this, 'forgetLegacyOptions']);
+        add_action('updated_option', [$this, 'forgetLegacyOptions']);
     }
 
     /**
@@ -58,7 +60,7 @@ final class SettingsPage
     public function registerSetting(): void
     {
         register_setting(
-            'sls',
+            'sc',
             $this->options->optionKey(),
             [
                 'type' => 'array',
@@ -70,15 +72,28 @@ final class SettingsPage
     }
 
     /**
+     * Drop sls_options once WordPress has stored sc_options.
+     *
+     * @param string $option Option name that was just added or updated.
+     */
+    public function forgetLegacyOptions(string $option): void
+    {
+        if ($this->options->optionKey() !== $option) {
+            return;
+        }
+        $this->options->forgetLegacyOption();
+    }
+
+    /**
      * Add the plugin settings page under Settings.
      */
     public function menu(): void
     {
         add_options_page(
-            __('SAML LDAP SSO', 'saml-ldap-sso'),
-            __('SAML LDAP SSO', 'saml-ldap-sso'),
+            __('Signclave – SSO for SAML and LDAP', 'signclave-sso'),
+            __('Signclave SSO', 'signclave-sso'),
             'manage_options',
-            'sls-settings',
+            'sc-settings',
             [$this, 'renderPage']
         );
     }
@@ -89,7 +104,7 @@ final class SettingsPage
     public function renderPage(): void
     {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('Unauthorized.', 'saml-ldap-sso'));
+            wp_die(esc_html__('Unauthorized.', 'signclave-sso'));
         }
 
         $options = $this->options->getAll();
@@ -104,8 +119,8 @@ final class SettingsPage
                 'metadata_xml' => $this->metadata->buildSpMetadataXml(),
                 'metadata_url' => $this->metadata->spMetadataUrl(),
                 'metadata_download' => wp_nonce_url(
-                    admin_url('admin-post.php?action=sls_download_metadata'),
-                    'sls_download_metadata'
+                    admin_url('admin-post.php?action=sc_download_metadata'),
+                    'sc_download_metadata'
                 ),
                 'recent_acs_failures' => $this->logger->getRecentAuditEntries(3),
                 'mappings_text' => $this->mappingsToText($options['roles']['mappings']),
@@ -137,11 +152,11 @@ final class SettingsPage
         $existing = $this->options->getAll();
         $posted = is_array($input) ? $input : [];
         $new = array_replace_recursive($existing, $posted);
-        // phpcs:disable WordPress.Security.NonceVerification -- Settings API verifies the sls-options nonce before this callback.
+        // phpcs:disable WordPress.Security.NonceVerification -- Settings API verifies the sc-options nonce before this callback.
         $optionPage = isset($_POST['option_page'])
             ? sanitize_text_field(wp_unslash((string) $_POST['option_page']))
             : '';
-        $fromSettingsForm = 'sls' === $optionPage;
+        $fromSettingsForm = 'sc' === $optionPage;
 
         if ($fromSettingsForm) {
             $new['general']['auto_sso'] = !empty($posted['general']['auto_sso']);
@@ -154,8 +169,8 @@ final class SettingsPage
             $new['ldap']['enabled'] = !empty($posted['ldap']['enabled']);
             $new['ldap']['allow_insecure_ldap'] = !empty($posted['ldap']['allow_insecure_ldap']);
 
-            $rotateKey = isset($_POST['sls_regenerate_bypass_key'])
-                ? sanitize_text_field(wp_unslash((string) $_POST['sls_regenerate_bypass_key']))
+            $rotateKey = isset($_POST['sc_regenerate_bypass_key'])
+                ? sanitize_text_field(wp_unslash((string) $_POST['sc_regenerate_bypass_key']))
                 : '';
             if ('' !== $rotateKey) {
                 $new['general']['password_bypass_key'] = wp_generate_password(32, false, false);
@@ -168,15 +183,15 @@ final class SettingsPage
             }
 
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- bind password must not pass sanitize_text_field.
-            $bindPlain = isset($_POST['sls_bind_password']) ? (string) wp_unslash($_POST['sls_bind_password']) : '';
+            $bindPlain = isset($_POST['sc_bind_password']) ? (string) wp_unslash($_POST['sc_bind_password']) : '';
             if ('' !== $bindPlain) {
                 $new['ldap']['bind_password_encrypted'] = $this->options->encryptSecret($bindPlain);
             } else {
                 $new['ldap']['bind_password_encrypted'] = (string) ($existing['ldap']['bind_password_encrypted'] ?? '');
             }
 
-            $mappingsText = isset($_POST['sls_role_mappings'])
-                ? sanitize_textarea_field(wp_unslash((string) $_POST['sls_role_mappings']))
+            $mappingsText = isset($_POST['sc_role_mappings'])
+                ? sanitize_textarea_field(wp_unslash((string) $_POST['sc_role_mappings']))
                 : '';
             $new['roles']['mappings'] = $this->parseMappings($mappingsText);
 
@@ -198,9 +213,9 @@ final class SettingsPage
     public function handleMetadataDownload(): void
     {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('Unauthorized.', 'saml-ldap-sso'));
+            wp_die(esc_html__('Unauthorized.', 'signclave-sso'));
         }
-        check_admin_referer('sls_download_metadata');
+        check_admin_referer('sc_download_metadata');
 
         $host = (string) wp_parse_url(home_url(), PHP_URL_HOST);
         $filename = sanitize_file_name(('' !== $host ? $host : 'sp') . '-saml-metadata.xml');

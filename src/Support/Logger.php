@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Support;
+namespace Signclave\Support;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Settings\Options;
+use Signclave\Settings\Options;
 
 /**
- * Append-only logs under uploads/saml-ldap-sso.
+ * Append-only logs under uploads/signclave-sso.
  *
  * Filenames carry a random suffix stored in the plugin options, so the log path
  * is not guessable on servers that ignore the directory `.htaccess` (nginx).
  */
 final class Logger
 {
-    private string $dir;
+    private ?string $dir = null;
 
     /** @var array{log:string,audit:string}|null */
     private ?array $filenames = null;
@@ -29,8 +29,23 @@ final class Logger
     public function __construct(
         private readonly Options $options
     ) {
+    }
+
+    /**
+     * Directory that holds the configured log files.
+     */
+    private function directory(): string
+    {
+        if (null !== $this->dir) {
+            return $this->dir;
+        }
+
         $upload = wp_upload_dir();
-        $this->dir = trailingslashit((string) ($upload['basedir'] ?? '')) . 'saml-ldap-sso';
+        $base = trailingslashit((string) ($upload['basedir'] ?? ''));
+        $current = $base . 'signclave-sso';
+        $this->dir = $current;
+
+        return $current;
     }
 
     /**
@@ -76,7 +91,7 @@ final class Logger
     public function getRecentAuditEntries(int $limit = 5): array
     {
         $limit = max(1, min(20, $limit));
-        $path = trailingslashit($this->dir) . $this->logFilenames()['audit'];
+        $path = trailingslashit($this->directory()) . $this->logFilenames()['audit'];
         if (!is_readable($path)) {
             return [];
         }
@@ -111,7 +126,7 @@ final class Logger
         $cutoff = time() - ($days * 86400);
         $names = $this->logFilenames();
         foreach (['log', 'audit'] as $kind) {
-            $this->pruneFile(trailingslashit($this->dir) . $names[$kind], $cutoff);
+            $this->pruneFile(trailingslashit($this->directory()) . $names[$kind], $cutoff);
         }
     }
 
@@ -185,10 +200,10 @@ final class Logger
 
         if ('' === $log || '' === $audit) {
             if ('' === $log) {
-                $log = self::randomLogFilename('sls');
+                $log = self::randomLogFilename('sc');
             }
             if ('' === $audit) {
-                $audit = self::randomLogFilename('sls-audit');
+                $audit = self::randomLogFilename('sc-audit');
             }
             $all['general']['log_file'] = $log;
             $all['general']['audit_log_file'] = $audit;
@@ -206,7 +221,7 @@ final class Logger
     /**
      * Build a random, unguessable log filename.
      *
-     * @param string $prefix Filename prefix, e.g. `sls` or `sls-audit`.
+     * @param string $prefix Filename prefix, e.g. `sc` or `sc-audit`.
      */
     public static function randomLogFilename(string $prefix): string
     {
@@ -224,7 +239,7 @@ final class Logger
     private function write(string $level, string $message, array $context, string $filename): void
     {
         $this->ensureDirectory();
-        $path = trailingslashit($this->dir) . $filename;
+        $path = trailingslashit($this->directory()) . $filename;
         $line = sprintf(
             "[%s] %s %s %s\n",
             wp_date('c'),
@@ -245,15 +260,15 @@ final class Logger
      */
     private function ensureDirectory(): void
     {
-        if (!file_exists($this->dir)) {
-            wp_mkdir_p($this->dir);
+        if (!file_exists($this->directory())) {
+            wp_mkdir_p($this->directory());
         }
-        $index = trailingslashit($this->dir) . 'index.php';
+        $index = trailingslashit($this->directory()) . 'index.php';
         if (!file_exists($index)) {
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- directory index guard in uploads/.
             file_put_contents($index, "<?php\n// Silence is golden.\n");
         }
-        $htaccess = trailingslashit($this->dir) . '.htaccess';
+        $htaccess = trailingslashit($this->directory()) . '.htaccess';
         if (!file_exists($htaccess)) {
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Apache deny rule in uploads/.
             file_put_contents($htaccess, "Require all denied\n");

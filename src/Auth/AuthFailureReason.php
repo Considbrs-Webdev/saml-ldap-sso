@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Auth;
+namespace Signclave\Auth;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -49,21 +49,21 @@ enum AuthFailureReason: string
     case UnsignedAssertion = 'unsigned_assertion';
     case Sha1Rejected = 'sha1_rejected';
 
-    case LdapInvalidUsername = 'sls_ldap_invalid_username';
-    case LdapDisabled = 'sls_ldap_disabled';
-    case LdapUnavailable = 'sls_ldap_unavailable';
-    case LdapNotConfigured = 'sls_ldap_not_configured';
-    case LdapInsecure = 'sls_ldap_insecure';
-    case LdapConnectFailed = 'sls_ldap_connect_failed';
-    case LdapStartTlsFailed = 'sls_ldap_starttls_failed';
-    case LdapBindFailed = 'sls_ldap_bind_failed';
-    case LdapSearchFailed = 'sls_ldap_search_failed';
-    case LdapUserNotFound = 'sls_ldap_user_not_found';
-    case SecretDecryptFailed = 'sls_secret_decrypt_failed';
-    case InvalidUser = 'sls_invalid_user';
-    case NoGroup = 'sls_no_group';
-    case Locked = 'sls_locked';
-    case LocalOnly = 'sls_local_only';
+    case LdapInvalidUsername = 'sc_ldap_invalid_username';
+    case LdapDisabled = 'sc_ldap_disabled';
+    case LdapUnavailable = 'sc_ldap_unavailable';
+    case LdapNotConfigured = 'sc_ldap_not_configured';
+    case LdapInsecure = 'sc_ldap_insecure';
+    case LdapConnectFailed = 'sc_ldap_connect_failed';
+    case LdapStartTlsFailed = 'sc_ldap_starttls_failed';
+    case LdapBindFailed = 'sc_ldap_bind_failed';
+    case LdapSearchFailed = 'sc_ldap_search_failed';
+    case LdapUserNotFound = 'sc_ldap_user_not_found';
+    case SecretDecryptFailed = 'sc_secret_decrypt_failed';
+    case InvalidUser = 'sc_invalid_user';
+    case NoGroup = 'sc_no_group';
+    case Locked = 'sc_locked';
+    case LocalOnly = 'sc_local_only';
 
     /**
      * Resolve a log code string to a known case, defaulting to AcsException.
@@ -98,7 +98,7 @@ enum AuthFailureReason: string
      */
     public function userMessage(): string
     {
-        return __('Invalid credentials.', 'saml-ldap-sso');
+        return __('Invalid credentials.', 'signclave-sso');
     }
 
     /**

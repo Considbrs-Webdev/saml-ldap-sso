@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Admin;
+namespace Signclave\Admin;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Ldap\ClientInterface;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Saml\Metadata;
-use SamlLdapSso\Saml\SignatureVerifier;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Clock;
-use SamlLdapSso\Support\Logger;
+use Signclave\Ldap\ClientInterface;
+use Signclave\Ldap\Connection;
+use Signclave\Saml\Metadata;
+use Signclave\Saml\SignatureVerifier;
+use Signclave\Settings\Options;
+use Signclave\Support\Clock;
+use Signclave\Support\Logger;
 
 /**
  * Admin AJAX diagnostics for LDAP bind and outbound SAML AuthnRequest.
@@ -44,21 +44,21 @@ final class Diagnostics
      */
     public function registerHooks(): void
     {
-        add_action('wp_ajax_sls_test_ldap', [$this, 'testLdap']);
-        add_action('wp_ajax_sls_test_sso', [$this, 'testSso']);
+        add_action('wp_ajax_sc_test_ldap', [$this, 'testLdap']);
+        add_action('wp_ajax_sc_test_sso', [$this, 'testSso']);
     }
 
     /**
      * AJAX: validate LDAP connectivity, service bind, and optional user bind.
      *
-     * Expects POST fields: username, password, mode (`quick`|`auth`), and nonce `sls_test_ldap`.
+     * Expects POST fields: username, password, mode (`quick`|`auth`), and nonce `sc_test_ldap`.
      */
     public function testLdap(): void
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(esc_html__('Unauthorized.', 'saml-ldap-sso'));
+            wp_send_json_error(esc_html__('Unauthorized.', 'signclave-sso'));
         }
-        check_ajax_referer('sls_test_ldap');
+        check_ajax_referer('sc_test_ldap');
 
         $username = isset($_POST['username']) ? sanitize_text_field(wp_unslash((string) $_POST['username'])) : '';
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- diagnostic password must not pass sanitize_text_field.
@@ -221,14 +221,14 @@ final class Diagnostics
     /**
      * AJAX: validate outbound SAML AuthnRequest generation (does not exercise ACS).
      *
-     * Expects POST fields: username, password (ignored), and nonce `sls_test_sso`.
+     * Expects POST fields: username, password (ignored), and nonce `sc_test_sso`.
      */
     public function testSso(): void
     {
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(esc_html__('Unauthorized.', 'saml-ldap-sso'));
+            wp_send_json_error(esc_html__('Unauthorized.', 'signclave-sso'));
         }
-        check_ajax_referer('sls_test_sso');
+        check_ajax_referer('sc_test_sso');
 
         $username = isset($_POST['username']) ? sanitize_text_field(wp_unslash((string) $_POST['username'])) : '';
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- diagnostic password must not pass sanitize_text_field.
@@ -277,7 +277,7 @@ final class Diagnostics
         $log[] = '[SSO] IdP Entity ID: ' . $entity;
         $log[] = '[SSO] IdP SSO URL: ' . $ssoUrl;
         $log[] = '[SSO] Note: This test does NOT perform a real login or validate the SAML Response (ACS).';
-        $log[] = '[SSO] If login fails after IdP, check "Recent SAML login rejections" above or the audit log in uploads/saml-ldap-sso.';
+        $log[] = '[SSO] If login fails after IdP, check "Recent SAML login rejections" above or the audit log in uploads/signclave-sso.';
         $log[] = '[SSO] IdP-initiated SSO allowed: ' . ($this->options->get('general', 'allow_idp_initiated', false) ? 'yes' : 'no');
         $log[] = '[SSO] Clock skew tolerance (s): ' . (int) $this->options->get('general', 'saml_clock_skew_seconds', 60);
 

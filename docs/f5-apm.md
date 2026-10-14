@@ -6,12 +6,12 @@ The defaults below match a typical F5 + eDirectory connector. Confirm Entity ID,
 
 ## SP values to paste into F5
 
-Taken from **Settings → SAML LDAP SSO** after the site URL is final:
+Taken from **Settings → Signclave SSO** after the site URL is final:
 
 | SP field | Plugin source |
 | --- | --- |
 | Entity ID | `saml.sp_entity_id` (default `site_url('/')`) |
-| Assertion Consumer Service (ACS) | `/?sls_saml=acs` (HTTPS) |
+| Assertion Consumer Service (ACS) | `/?sc_saml=acs` (HTTPS) |
 | WantAssertionsSigned | **true** (plugin metadata advertises this; unsigned assertions are rejected) |
 | NameIDFormat | unspecified (plugin metadata; see NameID below) |
 
@@ -44,7 +44,7 @@ Attribute **FriendlyName / Name** in F5 must match the plugin’s configured SAM
 | Last name | `sn` |
 | Groups | `groups` |
 
-Override them on the SAML settings screen (or map username/email/groups with the `sls_map_attributes` filter) if a connector uses different names. The filter cannot change which WordPress user the signed NameID binds to.
+Override them on the SAML settings screen (or map username/email/groups with the `sc_map_attributes` filter) if a connector uses different names. The filter cannot change which WordPress user the signed NameID binds to.
 
 ## NameID
 

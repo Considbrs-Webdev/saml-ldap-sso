@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Support;
+namespace Signclave\Support;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use function SamlLdapSso\config;
+use function Signclave\config;
 
 /**
  * Renders PHP views under resources/views/.

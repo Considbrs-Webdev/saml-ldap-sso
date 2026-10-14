@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SAML LDAP SSO
+ * Plugin Name: Signclave – SSO for SAML and LDAP
  * Plugin URI: https://github.com/Considbrs-Webdev/saml-ldap-sso
  * Description: Secure SAML SSO + LDAP authentication for WordPress.
  * Version: 0.1.16
@@ -10,7 +10,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least: 6.0
  * Requires PHP: 8.2
- * Text Domain: saml-ldap-sso
+ * Text Domain: signclave-sso
  * Domain Path: /resources/languages
  */
 
@@ -18,15 +18,15 @@ declare(strict_types=1);
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SLS_VERSION', '0.1.16' );
-define( 'SLS_PLUGIN_FILE', __FILE__ );
+define( 'SC_VERSION', '0.1.16' );
+define( 'SC_PLUGIN_FILE', __FILE__ );
 
-use SamlLdapSso\Activator;
-use SamlLdapSso\Application;
-use SamlLdapSso\Providers\AdminServiceProvider;
-use SamlLdapSso\Providers\LdapServiceProvider;
-use SamlLdapSso\Providers\PluginServiceProvider;
-use SamlLdapSso\Providers\SamlServiceProvider;
+use Signclave\Activator;
+use Signclave\Application;
+use Signclave\Providers\AdminServiceProvider;
+use Signclave\Providers\LdapServiceProvider;
+use Signclave\Providers\PluginServiceProvider;
+use Signclave\Providers\SamlServiceProvider;
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
@@ -58,7 +58,7 @@ if ( file_exists( $pluginAutoloader ) ) {
 
 	if ( ! $autoloader || ! file_exists( $autoloader ) ) {
 		wp_die(
-			'SAML LDAP SSO: Could not find Composer autoloader. ' .
+			'Signclave: Could not find Composer autoloader. ' .
 			'Run "composer install --no-dev" in the plugin directory.'
 		);
 	}

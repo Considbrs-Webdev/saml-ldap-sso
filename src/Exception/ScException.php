@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Exception;
+namespace Signclave\Exception;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,6 +11,6 @@ if (!defined('ABSPATH')) {
 /**
  * Base runtime exception for plugin-specific failures.
  */
-class SlsException extends \RuntimeException
+class ScException extends \RuntimeException
 {
 }

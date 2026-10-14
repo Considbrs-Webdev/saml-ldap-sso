@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\RateLimiter;
-use SamlLdapSso\Tests\Support\OptionStore;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Settings\Options;
+use Signclave\Support\RateLimiter;
+use Signclave\Tests\Support\OptionStore;
 
 beforeEach(function () {
     OptionStore::reset();
@@ -83,7 +83,7 @@ beforeEach(function () {
 
 it('rejects a near-correct emergency key using hash_equals semantics', function () {
     OptionStore::seed([
-        'sls_options' => [
+        'sc_options' => [
             'general' => [
                 'password_bypass_key' => 'abcdefghijklmnopqrstuvwxyz012345',
             ],
@@ -94,20 +94,20 @@ it('rejects a near-correct emergency key using hash_equals semantics', function 
     $bypass = new PasswordBypass($options, new RateLimiter($options));
 
     $_GET['password'] = '1';
-    $_GET['sls_key'] = 'abcdefghijklmnopqrstuvwxyz012346';
+    $_GET['sc_key'] = 'abcdefghijklmnopqrstuvwxyz012346';
     $_POST = [];
 
     expect($bypass->isPasswordBypassRequest())->toBeFalse();
 
-    $_GET['sls_key'] = 'abcdefghijklmnopqrstuvwxyz012345';
+    $_GET['sc_key'] = 'abcdefghijklmnopqrstuvwxyz012345';
     expect($bypass->isPasswordBypassRequest())->toBeTrue();
 
-    unset($_GET['password'], $_GET['sls_key']);
+    unset($_GET['password'], $_GET['sc_key']);
 });
 
 it('accepts bypass credentials from POST hidden fields', function () {
     OptionStore::seed([
-        'sls_options' => [
+        'sc_options' => [
             'general' => [
                 'password_bypass_key' => 'secret-emergency-key-32chars!!',
                 'bypass_limit' => 2,
@@ -120,37 +120,37 @@ it('accepts bypass credentials from POST hidden fields', function () {
 
     $_GET = [];
     $_POST['password'] = '1';
-    $_POST['sls_key'] = 'secret-emergency-key-32chars!!';
+    $_POST['sc_key'] = 'secret-emergency-key-32chars!!';
 
     expect($bypass->isPasswordBypassRequest())->toBeTrue();
 
-    unset($_POST['password'], $_POST['sls_key']);
+    unset($_POST['password'], $_POST['sc_key']);
 });
 
 it('rejects SSO-managed accounts on the emergency login', function () {
     OptionStore::seed([
-        'sls_options' => [
+        'sc_options' => [
             'general' => ['password_bypass_key' => 'secret-emergency-key-32chars!!'],
         ],
     ]);
     $user = new WP_User();
     $user->user_login = 'alice';
-    SamlLdapSso\Tests\Support\UserStore::put($user);
-    SamlLdapSso\Tests\Support\UserStore::setMeta($user->ID, 'sls_source', 'saml');
+    Signclave\Tests\Support\UserStore::put($user);
+    Signclave\Tests\Support\UserStore::setMeta($user->ID, 'sc_source', 'saml');
 
     $options = new Options();
     $bypass = new PasswordBypass($options, new RateLimiter($options));
     $_GET['password'] = '1';
-    $_GET['sls_key'] = 'secret-emergency-key-32chars!!';
+    $_GET['sc_key'] = 'secret-emergency-key-32chars!!';
 
     $result = $bypass->enforceLocalAccountOnly($user, 'alice');
     expect($result)->toBeInstanceOf(WP_Error::class)
-        ->and($result->get_error_code())->toBe(SamlLdapSso\Auth\AuthFailureReason::LocalOnly->value);
+        ->and($result->get_error_code())->toBe(Signclave\Auth\AuthFailureReason::LocalOnly->value);
 });
 
 it('returns Locked when the rate limiter is engaged', function () {
     OptionStore::seed([
-        'sls_options' => [
+        'sc_options' => [
             'general' => [
                 'password_bypass_key' => 'secret-emergency-key-32chars!!',
                 'bypass_limit' => 1,
@@ -162,9 +162,9 @@ it('returns Locked when the rate limiter is engaged', function () {
     $limiter->recordFailure('password_bypass', 'alice', '');
     $bypass = new PasswordBypass($options, $limiter);
     $_GET['password'] = '1';
-    $_GET['sls_key'] = 'secret-emergency-key-32chars!!';
+    $_GET['sc_key'] = 'secret-emergency-key-32chars!!';
 
     $result = $bypass->enforceLocalAccountOnly(new WP_User(), 'alice');
     expect($result)->toBeInstanceOf(WP_Error::class)
-        ->and($result->get_error_code())->toBe(SamlLdapSso\Auth\AuthFailureReason::Locked->value);
+        ->and($result->get_error_code())->toBe(Signclave\Auth\AuthFailureReason::Locked->value);
 });

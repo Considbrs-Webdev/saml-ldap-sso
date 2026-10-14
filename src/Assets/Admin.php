@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Assets;
+namespace Signclave\Assets;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use function SamlLdapSso\config;
+use function Signclave\config;
 
 /**
  * Enqueues Vite-built admin assets on the settings page.
  */
 final class Admin
 {
-    private const HANDLE = 'saml-ldap-sso-admin';
+    private const HANDLE = 'signclave-sso-admin';
     private const ENTRY = 'resources/assets/js/admin.js';
 
     /**
@@ -57,7 +57,7 @@ final class Admin
      */
     public function enqueue(string $hook): void
     {
-        if ('settings_page_sls-settings' !== $hook) {
+        if ('settings_page_sc-settings' !== $hook) {
             return;
         }
 
@@ -77,12 +77,12 @@ final class Admin
 
             wp_localize_script(
                 self::HANDLE,
-                'slsAdmin',
+                'scAdmin',
                 [
                     'ajaxUrl' => admin_url('admin-ajax.php'),
-                    'ldapNonce' => wp_create_nonce('sls_test_ldap'),
-                    'ssoNonce' => wp_create_nonce('sls_test_sso'),
-                    'copied' => __('Copied', 'saml-ldap-sso'),
+                    'ldapNonce' => wp_create_nonce('sc_test_ldap'),
+                    'ssoNonce' => wp_create_nonce('sc_test_sso'),
+                    'copied' => __('Copied', 'signclave-sso'),
                 ]
             );
         }

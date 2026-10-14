@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Saml;
+namespace Signclave\Saml;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Settings\Options;
+use Signclave\Settings\Options;
 
 /**
  * SP metadata and ACS/Entity ID helpers.
@@ -36,7 +36,7 @@ final class Metadata
      */
     public function spAcsUrl(): string
     {
-        return add_query_arg('sls_saml', 'acs', site_url('/'));
+        return add_query_arg('sc_saml', 'acs', site_url('/'));
     }
 
     /**
@@ -44,7 +44,7 @@ final class Metadata
      */
     public function spMetadataUrl(): string
     {
-        return add_query_arg('sls_saml', 'metadata', site_url('/'));
+        return add_query_arg('sc_saml', 'metadata', site_url('/'));
     }
 
     /**

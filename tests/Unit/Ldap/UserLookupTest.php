@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Auth\AuthFailureReason;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Tests\Support\FakeLdapClient;
-use SamlLdapSso\Tests\Support\OptionStore;
+use Signclave\Auth\AuthFailureReason;
+use Signclave\Ldap\Connection;
+use Signclave\Ldap\UserLookup;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
+use Signclave\Tests\Support\FakeLdapClient;
+use Signclave\Tests\Support\OptionStore;
 
-function slsLdapOptions(array $ldapOverrides = []): Options
+function scLdapOptions(array $ldapOverrides = []): Options
 {
     $options = new Options();
     $stored = $options->defaults();
@@ -21,12 +21,12 @@ function slsLdapOptions(array $ldapOverrides = []): Options
     $stored['ldap']['bind_password_encrypted'] = $options->encryptSecret('bind-secret');
     $stored['ldap']['allow_insecure_ldap'] = false;
     $stored['ldap'] = array_merge($stored['ldap'], $ldapOverrides);
-    OptionStore::seed(['sls_options' => $stored]);
+    OptionStore::seed(['sc_options' => $stored]);
 
     return new Options();
 }
 
-function slsFakeAlice(FakeLdapClient $ldap): void
+function scFakeAlice(FakeLdapClient $ldap): void
 {
     $ldap->seedDirectory([
         'alice' => [
@@ -48,8 +48,8 @@ function slsFakeAlice(FakeLdapClient $ldap): void
 
 it('finds a user after service bind over ldaps without StartTLS', function () {
     $ldap = new FakeLdapClient();
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions();
+    scFakeAlice($ldap);
+    $options = scLdapOptions();
     $lookup = new UserLookup($ldap, new Logger($options), new Connection($ldap), $options);
 
     $user = $lookup->findUser('alice');
@@ -62,8 +62,8 @@ it('finds a user after service bind over ldaps without StartTLS', function () {
 
 it('returns user not found for an unknown cn', function () {
     $ldap = new FakeLdapClient();
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions();
+    scFakeAlice($ldap);
+    $options = scLdapOptions();
     $lookup = new UserLookup($ldap, new Logger($options), new Connection($ldap), $options);
 
     expect($lookup->findUser('bob'))->toBe(AuthFailureReason::LdapUserNotFound);
@@ -71,7 +71,7 @@ it('returns user not found for an unknown cn', function () {
 
 it('rejects LDAP injection characters in the username', function () {
     $ldap = new FakeLdapClient();
-    $options = slsLdapOptions();
+    $options = scLdapOptions();
     $lookup = new UserLookup($ldap, new Logger($options), new Connection($ldap), $options);
 
     expect($lookup->findUser('alice)'))->toBe(AuthFailureReason::LdapInvalidUsername)
@@ -80,8 +80,8 @@ it('rejects LDAP injection characters in the username', function () {
 
 it('escapes backslashes in the LDAP filter', function () {
     $ldap = new FakeLdapClient();
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions();
+    scFakeAlice($ldap);
+    $options = scLdapOptions();
     $lookup = new UserLookup($ldap, new Logger($options), new Connection($ldap), $options);
     $lookup->findUser('alice\\x');
 
@@ -91,8 +91,8 @@ it('escapes backslashes in the LDAP filter', function () {
 it('fails closed when the service bind fails', function () {
     $ldap = new FakeLdapClient();
     $ldap->serviceBindSucceeds = false;
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions();
+    scFakeAlice($ldap);
+    $options = scLdapOptions();
     $lookup = new UserLookup($ldap, new Logger($options), new Connection($ldap), $options);
 
     expect($lookup->findUser('alice'))->toBe(AuthFailureReason::LdapBindFailed);
@@ -101,8 +101,8 @@ it('fails closed when the service bind fails', function () {
 it('fails closed when StartTLS fails on ldap://', function () {
     $ldap = new FakeLdapClient();
     $ldap->startTlsSucceeds = false;
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions([
+    scFakeAlice($ldap);
+    $options = scLdapOptions([
         'hosts' => 'ldap://ldap.example.test:389',
         'allow_insecure_ldap' => false,
     ]);
@@ -114,8 +114,8 @@ it('fails closed when StartTLS fails on ldap://', function () {
 
 it('skips StartTLS for ldaps://', function () {
     $ldap = new FakeLdapClient();
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions(['hosts' => 'ldaps://ldap.example.test:636']);
+    scFakeAlice($ldap);
+    $options = scLdapOptions(['hosts' => 'ldaps://ldap.example.test:636']);
     $lookup = new UserLookup($ldap, new Logger($options), new Connection($ldap), $options);
     $lookup->findUser('alice');
 
@@ -124,8 +124,8 @@ it('skips StartTLS for ldaps://', function () {
 
 it('allows plaintext ldap:// when allow_insecure is on', function () {
     $ldap = new FakeLdapClient();
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions([
+    scFakeAlice($ldap);
+    $options = scLdapOptions([
         'hosts' => 'ldap://ldap.example.test:389',
         'allow_insecure_ldap' => true,
     ]);
@@ -139,8 +139,8 @@ it('allows plaintext ldap:// when allow_insecure is on', function () {
 it('fails over to the second host', function () {
     $ldap = new FakeLdapClient();
     $ldap->failHost('ldaps://ldap-down.example.test:636');
-    slsFakeAlice($ldap);
-    $options = slsLdapOptions([
+    scFakeAlice($ldap);
+    $options = scLdapOptions([
         'hosts' => 'ldaps://ldap-down.example.test:636,ldaps://ldap.example.test:636',
     ]);
     $lookup = new UserLookup($ldap, new Logger($options), new Connection($ldap), $options);

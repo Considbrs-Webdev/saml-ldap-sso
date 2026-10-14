@@ -1,5 +1,5 @@
 {
-  "name": "saml-ldap-sso",
+  "name": "signclave-sso",
   "version": "0.1.16",
   "private": true,
   "type": "module",
@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "translate": "npm run translate:pot && npm run translate:update",
-    "translate:pot": "wp i18n make-pot . resources/languages/saml-ldap-sso.pot --include=src,resources",
-    "translate:update": "for file in ./resources/languages/*.po; do wp i18n update-po ./resources/languages/saml-ldap-sso.pot $file; done",
+    "translate:pot": "wp i18n make-pot . resources/languages/signclave-sso.pot --include=src,resources",
+    "translate:update": "for file in ./resources/languages/*.po; do wp i18n update-po ./resources/languages/signclave-sso.pot $file; done",
     "translate:compile": "npm run translate:mo",
     "translate:mo": "wp i18n make-mo ./resources/languages ./resources/languages"
   },

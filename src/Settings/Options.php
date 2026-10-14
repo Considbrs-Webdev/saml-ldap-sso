@@ -2,27 +2,31 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Settings;
+namespace Signclave\Settings;
 
 if (! defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Saml\SignatureVerifier;
+use Signclave\Saml\SignatureVerifier;
 
-use function SamlLdapSso\config;
+use function Signclave\config;
 
 /**
- * Plugin options stored in sls_options. All writes go through sanitize().
+ * Plugin options stored in sc_options. All writes go through sanitize().
+ *
+ * Reads legacy sls_options until the first write, which stores sc_options and
+ * deletes the old key.
  */
 final class Options
 {
+    public const LEGACY_OPTION_KEY = 'sls_options';
     /**
      * Return the WordPress option key used to store plugin settings.
      */
     public function optionKey(): string
     {
-        return (string) config('app.option_key', 'sls_options');
+        return (string) config('app.option_key', 'sc_options');
     }
 
     /**
@@ -98,8 +102,13 @@ final class Options
      */
     public function getAll(): array
     {
-        $stored = get_option($this->optionKey(), []);
-        return $this->deepMerge($this->defaults(), is_array($stored) ? $stored : []);
+        $stored = get_option($this->optionKey(), null);
+        if (! is_array($stored)) {
+            $legacy = get_option(self::LEGACY_OPTION_KEY, null);
+            $stored = is_array($legacy) ? $legacy : [];
+        }
+
+        return $this->deepMerge($this->defaults(), $stored);
     }
 
     /**
@@ -121,9 +130,24 @@ final class Options
         $key = $this->optionKey();
         if (false === get_option($key, false)) {
             add_option($key, $sanitized, '', false);
+        } else {
+            update_option($key, $sanitized, false);
+        }
+        $this->forgetLegacyOption();
+    }
+
+    /**
+     * Delete sls_options after a successful write to the current key.
+     */
+    public function forgetLegacyOption(): void
+    {
+        if (self::LEGACY_OPTION_KEY === $this->optionKey()) {
             return;
         }
-        update_option($key, $sanitized, false);
+        if (false === get_option(self::LEGACY_OPTION_KEY, false)) {
+            return;
+        }
+        delete_option(self::LEGACY_OPTION_KEY);
     }
 
     /**
@@ -282,7 +306,7 @@ final class Options
         if ('' === $value) {
             return '';
         }
-        $key = hash_hkdf('sha256', wp_salt('auth'), 32, 'sls-secret');
+        $key = hash_hkdf('sha256', wp_salt('auth'), 32, 'sc-secret');
         $iv = random_bytes(12);
         $tag = '';
         $enc = openssl_encrypt($value, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
@@ -313,7 +337,7 @@ final class Options
         if (false === $raw || strlen($raw) < 29) {
             return false;
         }
-        $key = hash_hkdf('sha256', wp_salt('auth'), 32, 'sls-secret');
+        $key = hash_hkdf('sha256', wp_salt('auth'), 32, 'sc-secret');
         $iv = substr($raw, 0, 12);
         $tag = substr($raw, 12, 16);
         $enc = substr($raw, 28);
@@ -328,17 +352,17 @@ final class Options
     {
         return __(
             'Stored LDAP bind password could not be decrypted. This happens when wp-config.php security salts are rotated or the site is copied between environments. Re-enter the bind password in the plugin settings.',
-            'saml-ldap-sso'
+            'signclave-sso'
         );
     }
 
     /**
-     * Restrict a stored log filename to a safe `sls-*.log` basename.
+     * Restrict a stored log filename to a safe `sc-*.log` basename.
      */
     private function sanitizeLogFilename(string $filename): string
     {
         $filename = sanitize_file_name(basename(trim($filename)));
-        if (! preg_match('/^sls[a-z0-9._-]*\.log$/i', $filename)) {
+        if (! preg_match('/^sc[a-z0-9._-]*\.log$/i', $filename)) {
             return '';
         }
 

@@ -1,58 +1,45 @@
-# Copyright (C) 2026 Consid Borås
-# This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SAML LDAP SSO 0.1.11\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/saml-ldap-sso\n"
+"Project-Id-Version: Signclave SSO 0.1.11\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/signclave-sso\n"
+"POT-Creation-Date: 2026-08-19T19:39:33+00:00\n"
+"PO-Revision-Date: 2026-10-14 15:59+0200\n"
 "Last-Translator: Plugin authors\n"
 "Language-Team: Svenska\n"
+"Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-19T19:39:33+00:00\n"
-"PO-Revision-Date: 2026-08-19 21:40+0200\n"
-"Language: sv_SE\n"
-"X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: saml-ldap-sso\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. Plugin Name of the plugin
-#: saml-ldap-sso.php
-#: src/Admin/SettingsPage.php:78
-#: src/Admin/SettingsPage.php:79
-msgid "SAML LDAP SSO"
-msgstr "SAML LDAP SSO"
+"X-Generator: Poedit 3.9\n"
+"X-Domain: signclave-sso\n"
 
 #. Description of the plugin
-#: saml-ldap-sso.php
+#: signclave-sso.php
 msgid "Secure SAML SSO + LDAP authentication for WordPress."
 msgstr "Säker SAML SSO och LDAP-autentisering för WordPress."
 
 #: resources/views/admin/settings-page.php:40
-msgid "Settings saved."
-msgstr "Inställningarna har sparats."
-
-#: resources/views/admin/settings-page.php:44
 msgid "Recent SAML login rejections (ACS)"
 msgstr "Senaste avvisade SAML-inloggningarna (ACS)"
 
-#: resources/views/admin/settings-page.php:45
+#: resources/views/admin/settings-page.php:41
 msgid "The SSO diagnostic test only validates the outbound AuthnRequest. These lines show why inbound SAML responses were rejected."
 msgstr "SSO-diagnostiken validerar bara utgående AuthnRequest. De här raderna visar varför inkommande SAML-svar avvisades."
 
-#: resources/views/admin/settings-page.php:52
+#: resources/views/admin/settings-page.php:48
 msgid "General"
 msgstr "Allmänt"
 
-#: resources/views/admin/settings-page.php:55
+#: resources/views/admin/settings-page.php:51
 msgid "Automatic SSO"
 msgstr "Automatisk SSO"
 
-#: resources/views/admin/settings-page.php:59
+#: resources/views/admin/settings-page.php:55
 msgid "Redirect visits to <code>wp-login.php</code> to SAML"
 msgstr "Omdirigera besök till <code>wp-login.php</code> till SAML"
 
-#: resources/views/admin/settings-page.php:61
+#: resources/views/admin/settings-page.php:57
 msgid "When on, visits go to the IdP. Local password login uses the emergency URL under Security. When off, the form stays visible and a Log in with SSO button is shown below the form."
 msgstr "När på går besök till IdP:n. Lokal lösenordsinloggning använder nöd-URL:en under Säkerhet. När av visas formuläret och en Logga in med SSO-knapp under formuläret."
 
@@ -60,381 +47,361 @@ msgstr "När på går besök till IdP:n. Lokal lösenordsinloggning använder n�
 msgid "Log in with SSO"
 msgstr "Logga in med SSO"
 
-#: resources/views/admin/settings-page.php:65
+#: resources/views/admin/settings-page.php:61
 msgid "Default role"
 msgstr "Standardroll"
 
-#: resources/views/admin/settings-page.php:75
+#: resources/views/admin/settings-page.php:71
 msgid "No group match"
 msgstr "Ingen gruppträff"
 
-#: resources/views/admin/settings-page.php:79
+#: resources/views/admin/settings-page.php:75
 msgid "Deny login when mappings exist and no group matches"
 msgstr "Neka inloggning när mappningar finns och ingen grupp matchar"
 
-#: resources/views/admin/settings-page.php:84
+#: resources/views/admin/settings-page.php:80
 msgid "Role downgrade"
 msgstr "Rollnedgradering"
 
-#: resources/views/admin/settings-page.php:88
+#: resources/views/admin/settings-page.php:84
 msgid "Remove mapped roles when the user no longer matches the group"
 msgstr "Ta bort mappade roller när användaren inte längre matchar gruppen"
 
-#: resources/views/admin/settings-page.php:90
+#: resources/views/admin/settings-page.php:86
 msgid "Only roles granted by this plugin are removed. The last remaining administrator is never downgraded."
 msgstr "Endast roller som pluginet har tilldelat tas bort. Den sista administratören nedgraderas aldrig."
 
-#: resources/views/admin/settings-page.php:94
+#: resources/views/admin/settings-page.php:90
 msgid "Protected logins"
 msgstr "Skyddade användarnamn"
 
-#: resources/views/admin/settings-page.php:97
+#: resources/views/admin/settings-page.php:93
 msgid "One WordPress username per line. These accounts never lose the administrator role through group mapping."
 msgstr "Ett WordPress-användarnamn per rad. Dessa konton förlorar aldrig administrator-rollen via gruppmappning."
 
-#: resources/views/admin/settings-page.php:101
+#: resources/views/admin/settings-page.php:97
 msgid "Role priority"
 msgstr "Rollprioritet"
 
-#: resources/views/admin/settings-page.php:104
+#: resources/views/admin/settings-page.php:100
 msgid "Comma-separated role slugs, most privileged first. Used by the “highest role” strategy. Roles not listed rank below these."
 msgstr "Kommaseparerade rollslugger, högst behörighet först. Används av strategin ”högsta roll”. Roller som inte listas rankas under dessa."
 
-#: resources/views/admin/settings-page.php:111
-#: src/Admin/SiteHealth.php:262
-#: src/Admin/SiteHealth.php:263
-#: src/Admin/SiteHealth.php:264
+#: resources/views/admin/settings-page.php:107 src/Admin/SiteHealth.php:262
+#: src/Admin/SiteHealth.php:263 src/Admin/SiteHealth.php:264
 msgid "Security"
 msgstr "Säkerhet"
 
-#: resources/views/admin/settings-page.php:114
+#: resources/views/admin/settings-page.php:110
 msgid "Strict SAML validation"
 msgstr "Strikt SAML-validering"
 
-#: resources/views/admin/settings-page.php:118
+#: resources/views/admin/settings-page.php:114
 msgid "Require IdP entity ID, audience, destination, recipient, and matching AuthnRequest ID"
 msgstr "Kräv IdP entity ID, audience, destination, recipient och matchande AuthnRequest-ID"
 
-#: resources/views/admin/settings-page.php:120
+#: resources/views/admin/settings-page.php:116
 msgid "Recommended. Disabling weakens assertion binding (not recommended in production)."
 msgstr "Rekommenderas. Att stänga av försvagar kopplingen till assertion (rekommenderas inte i produktion)."
 
-#: resources/views/admin/settings-page.php:124
+#: resources/views/admin/settings-page.php:120
 msgid "IdP-initiated SSO"
 msgstr "IdP-initierad SSO"
 
-#: resources/views/admin/settings-page.php:128
+#: resources/views/admin/settings-page.php:124
 msgid "Accept unsolicited responses without <code>InResponseTo</code>"
 msgstr "Acceptera oombett svar utan <code>InResponseTo</code>"
 
-#: resources/views/admin/settings-page.php:130
+#: resources/views/admin/settings-page.php:126
 msgid "Off by default. Enabling this drops the binding to an AuthnRequest we sent, so replay protection relies on the Recipient and response ID only. Enable only if the IdP starts the login."
 msgstr "Av som standard. Om det slås på tappar vi kopplingen till en AuthnRequest vi skickat, så replay-skyddet vilar bara på Recipient och svars-ID. Aktivera bara om IdP:n startar inloggningen."
 
-#: resources/views/admin/settings-page.php:134
+#: resources/views/admin/settings-page.php:130
 msgid "Clock skew tolerance"
 msgstr "Tolerans för klockskevhet"
 
-#: resources/views/admin/settings-page.php:137
+#: resources/views/admin/settings-page.php:133
 msgid "seconds"
 msgstr "sekunder"
 
-#: resources/views/admin/settings-page.php:138
+#: resources/views/admin/settings-page.php:134
 msgid "Allowed time drift between the IdP and this server when validating assertion validity windows. Default 60, maximum 300."
 msgstr "Tillåten tidsdrift mellan IdP och den här servern vid validering av assertion-fönster. Standard 60, max 300."
 
-#: resources/views/admin/settings-page.php:142
+#: resources/views/admin/settings-page.php:138
 msgid "Trust proxy HTTPS headers"
 msgstr "Lita på proxy-HTTPS-headers"
 
-#: resources/views/admin/settings-page.php:146
+#: resources/views/admin/settings-page.php:142
 msgid "Honor <code>X-Forwarded-Proto</code> / <code>X-Forwarded-SSL</code>"
 msgstr "Respektera <code>X-Forwarded-Proto</code> / <code>X-Forwarded-SSL</code>"
 
-#: resources/views/admin/settings-page.php:148
+#: resources/views/admin/settings-page.php:144
 msgid "Enable only behind a trusted reverse proxy that terminates TLS."
 msgstr "Aktivera bara bakom en betrodd reverse proxy som terminerar TLS."
 
-#: resources/views/admin/settings-page.php:152
+#: resources/views/admin/settings-page.php:148
 msgid "Link accounts by email"
 msgstr "Länka konton via e-post"
 
-#: resources/views/admin/settings-page.php:156
+#: resources/views/admin/settings-page.php:152
 msgid "Allow LDAP password login to match existing WordPress users by email"
 msgstr "Tillåt att LDAP-lösenordsinloggning matchar befintliga WordPress-användare via e-post"
 
-#: resources/views/admin/settings-page.php:158
+#: resources/views/admin/settings-page.php:154
 msgid "Off by default (OWASP). Applies to the LDAP password path only. SAML may bind to an existing user_login on first login; afterwards identity is the stored IdP NameID, never email."
 msgstr "Av som standard (OWASP). Gäller bara LDAP-lösenordsvägen. SAML kan binda till befintlig user_login vid första inloggningen; därefter är identiteten sparat IdP-NameID, aldrig e-post."
 
-#: resources/views/admin/settings-page.php:162
+#: resources/views/admin/settings-page.php:158
 msgid "Emergency local login"
 msgstr "Lokal nödinloggning"
 
-#: resources/views/admin/settings-page.php:166
+#: resources/views/admin/settings-page.php:162
 msgid "Secret URL for local WordPress accounts only. SAML/LDAP users cannot use it. Store securely."
 msgstr "Hemlig URL endast för lokala WordPress-konton. SAML-/LDAP-användare kan inte använda den. Förvara säkert."
 
-#: resources/views/admin/settings-page.php:168
+#: resources/views/admin/settings-page.php:164
 msgid "No bypass key configured. Save settings or regenerate a key below."
 msgstr "Ingen nödnyckel är konfigurerad. Spara inställningar eller generera en ny nyckel nedan."
 
-#: resources/views/admin/settings-page.php:170
+#: resources/views/admin/settings-page.php:166
 msgid "Regenerate emergency login key"
 msgstr "Generera ny nödnyckel"
 
-#: resources/views/admin/settings-page.php:174
+#: resources/views/admin/settings-page.php:170
 msgid "Log retention"
 msgstr "Loggretention"
 
-#: resources/views/admin/settings-page.php:177
+#: resources/views/admin/settings-page.php:173
 msgid "days"
 msgstr "dagar"
 
-#: resources/views/admin/settings-page.php:178
+#: resources/views/admin/settings-page.php:174
 msgid "Audit and diagnostic log lines older than this are deleted daily. Allowed range: 7–730 days (default 90)."
 msgstr "Revisions- och diagnostikloggrader äldre än detta raderas dagligen. Tillåtet intervall: 7–730 dagar (standard 90)."
 
-#: resources/views/admin/settings-page.php:185
+#: resources/views/admin/settings-page.php:181
 msgid "SAML"
 msgstr "SAML"
 
-#: resources/views/admin/settings-page.php:188
+#: resources/views/admin/settings-page.php:184
 msgid "SP Entity ID"
 msgstr "SP Entity ID"
 
-#: resources/views/admin/settings-page.php:192
+#: resources/views/admin/settings-page.php:188
 msgid "ACS URL"
 msgstr "ACS-URL"
 
-#: resources/views/admin/settings-page.php:196
+#: resources/views/admin/settings-page.php:192
 msgid "Metadata URL"
 msgstr "Metadata-URL"
 
-#: resources/views/admin/settings-page.php:200
+#: resources/views/admin/settings-page.php:196
 msgid "SP metadata"
 msgstr "SP-metadata"
 
-#: resources/views/admin/settings-page.php:202
+#: resources/views/admin/settings-page.php:198
 msgid "Import this file in F5 under <strong>SAML Identity Provider → SAML SP Connectors → From Metadata</strong>. Set signing certificate to <strong>None</strong>."
 msgstr "Importera filen i F5 under <strong>SAML Identity Provider → SAML SP Connectors → From Metadata</strong>. Sätt signeringscertifikat till <strong>None</strong>."
 
-#: resources/views/admin/settings-page.php:204
+#: resources/views/admin/settings-page.php:200
 msgid "Download metadata XML"
 msgstr "Ladda ner metadata-XML"
 
-#: resources/views/admin/settings-page.php:205
+#: resources/views/admin/settings-page.php:201
 msgid "Copy metadata"
 msgstr "Kopiera metadata"
 
-#: resources/views/admin/settings-page.php:211
+#: resources/views/admin/settings-page.php:207
 msgid "Identity Provider"
 msgstr "Identitetsleverantör"
 
-#: resources/views/admin/settings-page.php:214
+#: resources/views/admin/settings-page.php:210
 msgid "Entity ID"
 msgstr "Entity ID"
 
-#: resources/views/admin/settings-page.php:218
+#: resources/views/admin/settings-page.php:214
 msgid "SSO URL"
 msgstr "SSO-URL"
 
-#: resources/views/admin/settings-page.php:221
+#: resources/views/admin/settings-page.php:217
 msgid "Use <code>SingleSignOnService</code> from IdP metadata, not the <code>.xml</code> metadata file URL."
 msgstr "Använd <code>SingleSignOnService</code> från IdP-metadata, inte URL:en till <code>.xml</code>-metadatafilen."
 
-#: resources/views/admin/settings-page.php:225
+#: resources/views/admin/settings-page.php:221
 msgid "Group attribute"
 msgstr "Gruppattribut"
 
-#: resources/views/admin/settings-page.php:229
+#: resources/views/admin/settings-page.php:225
 msgid "Username attribute"
 msgstr "Användarnamnsattribut"
 
-#: resources/views/admin/settings-page.php:233
+#: resources/views/admin/settings-page.php:229
 msgid "Email attribute"
 msgstr "E-postattribut"
 
-#: resources/views/admin/settings-page.php:237
+#: resources/views/admin/settings-page.php:233
 msgid "First name attribute"
 msgstr "Förnamnsattribut"
 
-#: resources/views/admin/settings-page.php:241
+#: resources/views/admin/settings-page.php:237
 msgid "Last name attribute"
 msgstr "Efternamnsattribut"
 
-#: resources/views/admin/settings-page.php:245
+#: resources/views/admin/settings-page.php:241
 msgid "X509 certificate (PEM)"
 msgstr "X509-certifikat (PEM)"
 
-#: resources/views/admin/settings-page.php:249
+#: resources/views/admin/settings-page.php:245
 msgid "Secondary X509 certificate (PEM)"
 msgstr "Sekundärt X509-certifikat (PEM)"
 
-#: resources/views/admin/settings-page.php:252
+#: resources/views/admin/settings-page.php:248
 msgid "Optional. Assertions signed with either certificate are accepted, so the IdP certificate can be rotated without downtime. Add the new certificate here, wait for the IdP to switch, then move it to the field above and clear this one."
 msgstr "Valfritt. Assertions signerade med endera certifikatet accepteras, så IdP-certifikatet kan roteras utan driftstopp. Lägg det nya certifikatet här, vänta tills IdP:n bytt, flytta det sedan till fältet ovan och rensa det här."
 
-#: resources/views/admin/settings-page.php:259
+#: resources/views/admin/settings-page.php:255
 msgid "LDAP"
 msgstr "LDAP"
 
-#: resources/views/admin/settings-page.php:262
+#: resources/views/admin/settings-page.php:258
 msgid "LDAP fallback"
 msgstr "LDAP-fallback"
 
-#: resources/views/admin/settings-page.php:266
+#: resources/views/admin/settings-page.php:262
 msgid "Enable LDAP fallback authentication"
 msgstr "Aktivera LDAP-fallbackautentisering"
 
-#: resources/views/admin/settings-page.php:268
+#: resources/views/admin/settings-page.php:264
 msgid "When enabled and fully configured, LDAP is used for password login and to verify users before WordPress creates a <strong>new</strong> account from SAML. Existing WordPress accounts can still sign in via SAML if the directory is unavailable. When disabled (or incomplete), SAML runs alone and can create users from IdP attributes."
 msgstr "När det är påslaget och fullt konfigurerat används LDAP för lösenordsinloggning och för att verifiera användare innan WordPress skapar ett <strong>nytt</strong> konto från SAML. Befintliga WordPress-konton kan fortfarande logga in via SAML om katalogen är nere. När det är av (eller ofullständigt) körs SAML ensamt och kan skapa användare från IdP-attribut."
 
-#: resources/views/admin/settings-page.php:272
+#: resources/views/admin/settings-page.php:268
 msgid "Directory type"
 msgstr "Katalogtyp"
 
-#: resources/views/admin/settings-page.php:275
+#: resources/views/admin/settings-page.php:271
 msgid "eDirectory"
 msgstr "eDirectory"
 
-#: resources/views/admin/settings-page.php:276
+#: resources/views/admin/settings-page.php:272
 msgid "Active Directory"
 msgstr "Active Directory"
 
-#: resources/views/admin/settings-page.php:281
+#: resources/views/admin/settings-page.php:277
 msgid "Hosts"
 msgstr "Värdar"
 
-#: resources/views/admin/settings-page.php:284
+#: resources/views/admin/settings-page.php:280
 msgid "Comma-separated. Use <code>ldaps://host:636</code> in production."
 msgstr "Kommaseparerat. Använd <code>ldaps://host:636</code> i produktion."
 
-#: resources/views/admin/settings-page.php:288
+#: resources/views/admin/settings-page.php:284
 msgid "Base DN"
 msgstr "Base DN"
 
-#: resources/views/admin/settings-page.php:292
+#: resources/views/admin/settings-page.php:288
 msgid "Bind user / Bind DN"
 msgstr "Bind-användare / Bind DN"
 
-#: resources/views/admin/settings-page.php:295
+#: resources/views/admin/settings-page.php:291
 msgid "The service account used for LDAP reads. Can be DN, UPN, or account name depending on your directory."
 msgstr "Tjänstekontot som används för LDAP-läsning. Kan vara DN, UPN eller kontonamn beroende på katalog."
 
-#: resources/views/admin/settings-page.php:299
+#: resources/views/admin/settings-page.php:295
 msgid "Bind password"
 msgstr "Bind-lösenord"
 
-#: resources/views/admin/settings-page.php:302
+#: resources/views/admin/settings-page.php:298
 msgid "Leave empty to keep existing secret."
 msgstr "Lämna tomt för att behålla den sparade hemligheten."
 
-#: resources/views/admin/settings-page.php:306
+#: resources/views/admin/settings-page.php:302
 msgid "Security override"
 msgstr "Säkerhetsundantag"
 
-#: resources/views/admin/settings-page.php:310
+#: resources/views/admin/settings-page.php:306
 msgid "Allow <code>ldap://</code> (not recommended)"
 msgstr "Tillåt <code>ldap://</code> (rekommenderas inte)"
 
-#: resources/views/admin/settings-page.php:315
+#: resources/views/admin/settings-page.php:311
 msgid "User filter"
 msgstr "Användarfilter"
 
 #. translators: 1: %s code token, 2: typical eDirectory filter, 3: typical Active Directory filter
-#: resources/views/admin/settings-page.php:323
+#: resources/views/admin/settings-page.php:319
 #, php-format
 msgid "Use %1$s as username placeholder. Typical eDirectory: %2$s Typical AD: %3$s"
 msgstr "Använd %1$s som platshållare för användarnamn. Typiskt eDirectory: %2$s Typiskt AD: %3$s"
 
-#: resources/views/admin/settings-page.php:335
+#: resources/views/admin/settings-page.php:331
 msgid "Group attribute (eDirectory)"
 msgstr "Gruppattribut (eDirectory)"
 
-#: resources/views/admin/settings-page.php:339
+#: resources/views/admin/settings-page.php:335
 msgid "Group attribute (AD)"
 msgstr "Gruppattribut (AD)"
 
-#: resources/views/admin/settings-page.php:343
+#: resources/views/admin/settings-page.php:339
 msgid "Connection test"
 msgstr "Anslutningstest"
 
-#: resources/views/admin/settings-page.php:345
+#: resources/views/admin/settings-page.php:341
 msgid "Test LDAP"
 msgstr "Testa LDAP"
 
-#: resources/views/admin/settings-page.php:346
+#: resources/views/admin/settings-page.php:342
 msgid "Quick service bind validation for current LDAP settings."
 msgstr "Snabb validering av tjänstebind mot aktuella LDAP-inställningar."
 
-#: resources/views/admin/settings-page.php:354
+#: resources/views/admin/settings-page.php:350
 msgid "Group to role mappings"
 msgstr "Grupp-till-roll-mappningar"
 
-#: resources/views/admin/settings-page.php:355
+#: resources/views/admin/settings-page.php:351
 msgid "One row per mapping in format: <code>source|group|role</code>. Example: <code>ldap|cn=wp-admins,ou=groups,o=org|administrator</code>"
 msgstr "En rad per mappning i formatet: <code>source|group|role</code>. Exempel: <code>ldap|cn=wp-admins,ou=groups,o=org|administrator</code>"
 
-#: resources/views/admin/settings-page.php:360
+#: resources/views/admin/settings-page.php:356
 msgid "Save settings"
 msgstr "Spara inställningar"
 
-#: resources/views/admin/settings-page.php:365
+#: resources/views/admin/settings-page.php:361
 msgid "Diagnostics"
 msgstr "Diagnostik"
 
-#: resources/views/admin/settings-page.php:366
+#: resources/views/admin/settings-page.php:362
 msgid "Use this for technical validation. Password is never written to logs."
 msgstr "Används för teknisk validering. Lösenord skrivs aldrig till loggar."
 
-#: resources/views/admin/settings-page.php:369
+#: resources/views/admin/settings-page.php:365
 msgid "Test username"
 msgstr "Testanvändarnamn"
 
-#: resources/views/admin/settings-page.php:373
+#: resources/views/admin/settings-page.php:369
 msgid "Test password"
 msgstr "Testlösenord"
 
-#: resources/views/admin/settings-page.php:377
+#: resources/views/admin/settings-page.php:373
 msgid "Run tests"
 msgstr "Kör tester"
 
-#: resources/views/admin/settings-page.php:379
+#: resources/views/admin/settings-page.php:375
 msgid "Test LDAP auth"
 msgstr "Testa LDAP-auth"
 
-#: resources/views/admin/settings-page.php:380
+#: resources/views/admin/settings-page.php:376
 msgid "Test SSO flow"
 msgstr "Testa SSO-flöde"
 
-#: resources/views/admin/settings-page.php:384
+#: resources/views/admin/settings-page.php:380
 msgid "Technical log"
 msgstr "Teknisk logg"
 
-#: src/Admin/Diagnostics.php:59
-#: src/Admin/Diagnostics.php:229
-#: src/Admin/SettingsPage.php:92
-#: src/Admin/SettingsPage.php:207
+#: src/Admin/Diagnostics.php:59 src/Admin/Diagnostics.php:229
+#: src/Admin/SettingsPage.php:107 src/Admin/SettingsPage.php:216
 msgid "Unauthorized."
 msgstr "Otillåtet."
-
-#: src/Admin/SiteHealth.php:47
-msgid "SAML LDAP SSO: IdP certificate"
-msgstr "SAML LDAP SSO: IdP-certifikat"
-
-#: src/Admin/SiteHealth.php:51
-msgid "SAML LDAP SSO: LDAP TLS"
-msgstr "SAML LDAP SSO: LDAP TLS"
-
-#: src/Admin/SiteHealth.php:55
-msgid "SAML LDAP SSO: HTTPS"
-msgstr "SAML LDAP SSO: HTTPS"
-
-#: src/Admin/SiteHealth.php:59
-msgid "SAML LDAP SSO: LDAP configuration"
-msgstr "SAML LDAP SSO: LDAP-konfiguration"
 
 #: src/Admin/SiteHealth.php:88
 msgid "No primary IdP certificate is configured."
@@ -470,8 +437,7 @@ msgstr "Pinnade IdP-certifikat finns och går inte ut inom 30 dagar."
 msgid "IdP certificate needs attention."
 msgstr "IdP-certifikatet behöver åtgärdas."
 
-#: src/Admin/SiteHealth.php:155
-#: src/Admin/SiteHealth.php:229
+#: src/Admin/SiteHealth.php:155 src/Admin/SiteHealth.php:229
 msgid "LDAP is not enabled."
 msgstr "LDAP är inte aktiverat."
 
@@ -527,10 +493,6 @@ msgstr "SAML körs utan katalogverifiering."
 msgid "LDAP is configured."
 msgstr "LDAP är konfigurerat."
 
-#: src/Admin/SiteHealth.php:239
-msgid "Host, base DN, bind user, and bind secret are present. Use diagnostics or `wp sls test-ldap` for a live bind."
-msgstr "Värd, base DN, bind-användare och bind-hemlighet finns. Använd diagnostik eller `wp sls test-ldap` för en skarp bind."
-
 #: src/Admin/SiteHealth.php:246
 msgid "LDAP is enabled but incomplete."
 msgstr "LDAP är påslaget men ofullständigt."
@@ -544,41 +506,67 @@ msgid "Copied"
 msgstr "Kopierat"
 
 #: src/Auth/AuthFailureReason.php:101
-#: src/Providers/PluginServiceProvider.php:153
-#: src/Saml/Handler.php:257
-#: src/Saml/Handler.php:268
+#: src/Providers/PluginServiceProvider.php:153 src/Saml/Handler.php:256
+#: src/Saml/Handler.php:267
 msgid "Invalid credentials."
 msgstr "Ogiltiga uppgifter."
 
-#: src/Saml/Handler.php:210
-#: src/Saml/Handler.php:1080
-#: src/Saml/Handler.php:1083
+#: src/Saml/Handler.php:209 src/Saml/Handler.php:1099 src/Saml/Handler.php:1102
 msgid "SSO is not configured."
 msgstr "SSO är inte konfigurerat."
 
-#: src/Saml/Handler.php:1090
+#: src/Saml/Handler.php:1109
 msgid "Redirecting to sign in…"
 msgstr "Omdirigerar till inloggning…"
 
-#: src/Saml/Handler.php:1094
+#: src/Saml/Handler.php:1113
 msgid "Continue to sign in"
 msgstr "Fortsätt till inloggning"
 
-#: src/Settings/Options.php:329
+#: src/Settings/Options.php:353
 msgid "Stored LDAP bind password could not be decrypted. This happens when wp-config.php security salts are rotated or the site is copied between environments. Re-enter the bind password in the plugin settings."
 msgstr "Sparat LDAP bind-lösenord kunde inte dekrypteras. Det händer när säkerhetssalter i wp-config.php roteras eller sajten kopieras mellan miljöer. Ange bind-lösenordet igen i plugininställningarna."
 
 #. Plugin URI of the plugin
-#: saml-ldap-sso.php
+#: signclave-sso.php
 msgid "https://github.com/Considbrs-Webdev/saml-ldap-sso"
 msgstr "https://github.com/Considbrs-Webdev/saml-ldap-sso"
 
 #. Author of the plugin
-#: saml-ldap-sso.php
+#: signclave-sso.php
 msgid "Consid Borås"
 msgstr "Consid Borås"
 
 #. Author URI of the plugin
-#: saml-ldap-sso.php
+#: signclave-sso.php
 msgid "https://profiles.wordpress.org/considboras/"
 msgstr "https://profiles.wordpress.org/considboras/"
+
+#. Plugin Name of the plugin
+#: signclave-sso.php src/Admin/SettingsPage.php:93
+msgid "Signclave – SSO for SAML and LDAP"
+msgstr "Signclave – SSO för SAML och LDAP"
+
+#: src/Admin/SettingsPage.php:94
+msgid "Signclave SSO"
+msgstr "Signclave SSO"
+
+#: src/Admin/SiteHealth.php:47
+msgid "Signclave SSO: IdP certificate"
+msgstr "Signclave SSO: IdP certifikat"
+
+#: src/Admin/SiteHealth.php:51
+msgid "Signclave SSO: LDAP TLS"
+msgstr "Signclave SSO: LDAP TLS"
+
+#: src/Admin/SiteHealth.php:55
+msgid "Signclave SSO: HTTPS"
+msgstr "Signclave SSO: HTTPS"
+
+#: src/Admin/SiteHealth.php:59
+msgid "Signclave SSO: LDAP configuration"
+msgstr "Signclave SSO: LDAP konfiguration"
+
+#: src/Admin/SiteHealth.php:239
+msgid "Host, base DN, bind user, and bind secret are present. Use diagnostics or `wp signclave test-ldap` for a live bind."
+msgstr "Värd, bas-DN, bindningsanvändare och bindningshemlighet finns. Använd diagnostik eller `wp signclave test-ldap` för en live-bindning."

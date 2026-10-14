@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Users;
+namespace Signclave\Users;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Settings\Options;
+use Signclave\Settings\Options;
 
 /**
  * Map IdP/LDAP group names or DNs to WordPress roles.

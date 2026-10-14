@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Saml\Handler;
-use SamlLdapSso\Tests\Support\HandlerFactory;
+use Signclave\Saml\Handler;
+use Signclave\Tests\Support\HandlerFactory;
 
-function slsRelayHandler(): array
+function scRelayHandler(): array
 {
     $factory = new HandlerFactory();
     $factory->seedOptions();
@@ -15,7 +15,7 @@ function slsRelayHandler(): array
 }
 
 it('accepts a signed RelayState blob', function () {
-    [$factory, $handler] = slsRelayHandler();
+    [$factory, $handler] = scRelayHandler();
     $_REQUEST['redirect_to'] = 'https://sp.example.test/wp-admin/';
     $blob = $factory->invoke($handler, 'createRelayState');
     $url = $factory->invoke($handler, 'validateRelayState', $blob);
@@ -23,7 +23,7 @@ it('accepts a signed RelayState blob', function () {
 });
 
 it('rejects a tampered RelayState MAC', function () {
-    [$factory, $handler] = slsRelayHandler();
+    [$factory, $handler] = scRelayHandler();
     $_REQUEST['redirect_to'] = 'https://sp.example.test/wp-admin/';
     $blob = $factory->invoke($handler, 'createRelayState');
     $tampered = substr($blob, 0, -4) . 'dead';
@@ -32,25 +32,25 @@ it('rejects a tampered RelayState MAC', function () {
 });
 
 it('rejects an external host in RelayState', function () {
-    [$factory, $handler] = slsRelayHandler();
+    [$factory, $handler] = scRelayHandler();
     $url = $factory->invoke($handler, 'sanitizeRedirectTarget', 'https://evil.example/phish');
     expect($url)->toBe(admin_url());
 });
 
 it('rejects a protocol-relative URL', function () {
-    [$factory, $handler] = slsRelayHandler();
+    [$factory, $handler] = scRelayHandler();
     $url = $factory->invoke($handler, 'sanitizeRedirectTarget', '//evil.example/phish');
     expect($url)->toBe(admin_url());
 });
 
 it('rejects javascript and data URLs', function () {
-    [$factory, $handler] = slsRelayHandler();
+    [$factory, $handler] = scRelayHandler();
     expect($factory->invoke($handler, 'sanitizeRedirectTarget', 'javascript:alert(1)'))->toBe(admin_url())
         ->and($factory->invoke($handler, 'sanitizeRedirectTarget', 'data:text/html,hi'))->toBe(admin_url());
 });
 
 it('rejects an expired RelayState blob', function () {
-    [$factory, $handler] = slsRelayHandler();
+    [$factory, $handler] = scRelayHandler();
     $_REQUEST['redirect_to'] = 'https://sp.example.test/wp-admin/profile.php';
     $blob = $factory->invoke($handler, 'createRelayState');
     $factory->clock->advance(601);

@@ -1,25 +1,25 @@
-.sls-wrap {
+.sc-wrap {
 	.form-table {
 		th {
-			width: var(--sls-label-width);
-			padding-top: var(--sls-field-pad-top);
+			width: var(--sc-label-width);
+			padding-top: var(--sc-field-pad-top);
 		}
 
 		td {
-			padding-top: var(--sls-control-pad-top);
+			padding-top: var(--sc-control-pad-top);
 		}
 
 		.description {
-			margin-top: var(--sls-help-gap);
+			margin-top: var(--sc-help-gap);
 		}
 	}
 
 	.code {
-		font-family: var(--sls-mono);
+		font-family: var(--sc-mono);
 	}
 
 	.button[disabled] {
 		opacity: 0.75;
-		color: var(--sls-on-primary);
+		color: var(--sc-on-primary);
 	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="SAML LDAP SSO">
+<ruleset name="Signclave">
 	<description>WordPress Coding Standards with PSR-4 exceptions.</description>
 	<rule ref="WordPress">
 		<exclude name="WordPress.Files.FileName"/>
@@ -7,15 +7,15 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="sls"/>
-				<element value="SLS"/>
-				<element value="SamlLdapSso"/>
-				<element value="saml_ldap_sso"/>
+				<element value="sc"/>
+				<element value="SC"/>
+				<element value="Signclave"/>
+				<element value="signclave_sso"/>
 			</property>
 		</properties>
 	</rule>
 	<file>./src</file>
-	<file>./saml-ldap-sso.php</file>
+	<file>./signclave-sso.php</file>
 	<file>./helpers.php</file>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>

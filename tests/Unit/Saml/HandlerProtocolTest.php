@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Auth\AuthFailureReason;
-use SamlLdapSso\Exception\InvalidAssertion;
-use SamlLdapSso\Saml\Handler;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Tests\Support\OptionStore;
+use Signclave\Auth\AuthFailureReason;
+use Signclave\Exception\InvalidAssertion;
+use Signclave\Saml\Handler;
+use Signclave\Settings\Options;
+use Signclave\Tests\Support\OptionStore;
 
 if (!function_exists('nocache_headers')) {
     function nocache_headers(): void
@@ -52,7 +52,7 @@ it('rejects NameID elements that contain XML comments', function () {
 
 it('rejects oversized SAMLResponse before decoding', function () {
     OptionStore::seed([
-        'sls_options' => [
+        'sc_options' => [
             'general' => ['saml_response_max_bytes' => 100],
         ],
     ]);

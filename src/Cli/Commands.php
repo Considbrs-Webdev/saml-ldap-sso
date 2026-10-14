@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Cli;
+namespace Signclave\Cli;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\AuthFailureReason;
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Ldap\ClientInterface;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Saml\SignatureVerifier;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
+use Signclave\Auth\AuthFailureReason;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Ldap\ClientInterface;
+use Signclave\Ldap\Connection;
+use Signclave\Ldap\UserLookup;
+use Signclave\Saml\SignatureVerifier;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
 use WP_CLI;
 
 /**
- * WP-CLI commands: `wp sls …`.
+ * WP-CLI commands: `wp signclave …`.
  */
 final class Commands
 {
@@ -53,8 +53,8 @@ final class Commands
      *
      * ## EXAMPLES
      *
-     *     wp sls sso disable
-     *     wp sls sso enable
+     *     wp signclave sso disable
+     *     wp signclave sso enable
      *
      * @param array<int, string> $args Positional arguments.
      */
@@ -62,7 +62,7 @@ final class Commands
     {
         $action = strtolower((string) ($args[0] ?? ''));
         if (!in_array($action, ['enable', 'disable'], true)) {
-            WP_CLI::error('Usage: wp sls sso <enable|disable>');
+            WP_CLI::error('Usage: wp signclave sso <enable|disable>');
         }
 
         $all = $this->options->getAll();
@@ -78,7 +78,7 @@ final class Commands
      *
      * ## EXAMPLES
      *
-     *     wp sls rotate-key
+     *     wp signclave rotate-key
      */
     public function rotate_key(): void
     {
@@ -105,8 +105,8 @@ final class Commands
      *
      * ## EXAMPLES
      *
-     *     wp sls test-ldap
-     *     wp sls test-ldap --user=jdoe --password=secret
+     *     wp signclave test-ldap
+     *     wp signclave test-ldap --user=jdoe --password=secret
      *
      * @param array<int, string>    $args       Unused positional arguments.
      * @param array<string, string> $assoc_args Named arguments.
@@ -218,7 +218,7 @@ final class Commands
      *
      * ## EXAMPLES
      *
-     *     wp sls test-saml --file=/tmp/response.xml
+     *     wp signclave test-saml --file=/tmp/response.xml
      *
      * @param array<int, string>    $args       Unused positional arguments.
      * @param array<string, string> $assoc_args Named arguments.
@@ -269,7 +269,7 @@ final class Commands
      *
      * ## EXAMPLES
      *
-     *     wp sls doctor
+     *     wp signclave doctor
      */
     public function doctor(): void
     {
@@ -323,9 +323,10 @@ final class Commands
         $rows[] = ['auto_sso', !empty($all['general']['auto_sso']) ? 'yes' : 'no'];
 
         $upload = wp_upload_dir();
-        $dir = trailingslashit((string) ($upload['basedir'] ?? '')) . 'saml-ldap-sso';
+        $base = trailingslashit((string) ($upload['basedir'] ?? ''));
         $logFile = (string) ($all['general']['log_file'] ?? '');
         $auditFile = (string) ($all['general']['audit_log_file'] ?? '');
+        $dir = $base . 'signclave-sso';
         $rows[] = ['Log directory', is_dir($dir) ? $dir : 'missing'];
         $rows[] = ['log_file', '' !== $logFile ? $logFile : '(unset)'];
         $rows[] = ['audit_log_file', '' !== $auditFile ? $auditFile : '(unset)'];

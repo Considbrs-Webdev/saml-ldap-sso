@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Tests\Support\OptionStore;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
+use Signclave\Tests\Support\OptionStore;
 
 it('redacts passwords assertions and secrets from log context', function () {
-    OptionStore::seed(['sls_options' => []]);
+    OptionStore::seed(['sc_options' => []]);
     $logger = new Logger(new Options());
     $method = new ReflectionMethod(Logger::class, 'sanitizeContext');
 

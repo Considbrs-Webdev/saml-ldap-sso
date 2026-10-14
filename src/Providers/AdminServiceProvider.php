@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Providers;
+namespace Signclave\Providers;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Admin\Diagnostics;
-use SamlLdapSso\Admin\SettingsPage;
-use SamlLdapSso\Admin\SiteHealth;
-use SamlLdapSso\Assets\Admin as AdminAssets;
-use SamlLdapSso\Assets\ViteManifest;
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Container;
-use SamlLdapSso\Ldap\ClientInterface;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Saml\Metadata;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Clock;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Support\View;
+use Signclave\Admin\Diagnostics;
+use Signclave\Admin\SettingsPage;
+use Signclave\Admin\SiteHealth;
+use Signclave\Assets\Admin as AdminAssets;
+use Signclave\Assets\ViteManifest;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Container;
+use Signclave\Ldap\ClientInterface;
+use Signclave\Ldap\Connection;
+use Signclave\Saml\Metadata;
+use Signclave\Settings\Options;
+use Signclave\Support\Clock;
+use Signclave\Support\Logger;
+use Signclave\Support\View;
 
 /**
  * Admin UI, diagnostics, and asset services.

@@ -1,5 +1,5 @@
 {
-    "name": "considbrs-webdev/saml-ldap-sso",
+    "name": "considbrs-webdev/signclave-sso",
     "description": "Secure SAML SSO and LDAP authentication for WordPress",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
@@ -26,13 +26,13 @@
     },
     "autoload": {
         "psr-4": {
-            "SamlLdapSso\\": "src/",
-            "SamlLdapSso\\Vendor\\RobRichards\\XMLSecLibs\\": "vendor-prefixed/robrichards/xmlseclibs/src"
+            "Signclave\\": "src/",
+            "Signclave\\Vendor\\RobRichards\\XMLSecLibs\\": "vendor-prefixed/robrichards/xmlseclibs/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SamlLdapSso\\Tests\\": "tests/"
+            "Signclave\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -59,9 +59,9 @@
     "extra": {
         "strauss": {
             "target_directory": "vendor-prefixed",
-            "namespace_prefix": "SamlLdapSso\\Vendor\\",
-            "classmap_prefix": "SamlLdapSso_",
-            "constant_prefix": "SLS_",
+            "namespace_prefix": "Signclave\\Vendor\\",
+            "classmap_prefix": "Signclave_",
+            "constant_prefix": "SC_",
             "packages": [
                 "robrichards/xmlseclibs"
             ],

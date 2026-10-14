@@ -1,4 +1,4 @@
-# SAML LDAP SSO - Installationsguide
+# Signclave – Installationsguide
 
 Svensk driftguide. Utveckling, tester och zip-bygge står i [`README.md`](../README.md).
 
@@ -11,7 +11,7 @@ Svensk driftguide. Utveckling, tester och zip-bygge står i [`README.md`](../REA
 
 ## 2) SAML-konfiguration
 1. Aktivera pluginen.
-2. Gå till **Inställningar → SAML LDAP SSO**.
+2. Gå till **Inställningar → Signclave SSO**.
 3. Fyll i **Identity Provider** (Entity ID, SSO URL, X.509).
 4. Lägg gärna ett **Secondary X.509 certificate** inför certifikatrotation (noll downtime).
 5. I IdP: konfigurera ACS URL och Entity ID från pluginsidan; slå på assertion-signering.
@@ -38,11 +38,11 @@ Svensk driftguide. Utveckling, tester och zip-bygge står i [`README.md`](../REA
 - Automatisk SSO av: WordPress-formuläret visas, plus knappen **Logga in med SSO** under formuläret om IdP är konfigurerad.
 - LDAP är valfritt (av som standard). Utan katalog räcker SAML; befintliga WP-konton matchas på `user_login` mot SAML-`uid` vid första inloggningen. Därefter är `NameID` identiteten.
 - Med LDAP på och fullt konfigurerat krävs katalogträff bara för att **skapa** nya konton. Befintliga WP-konton kan logga in via SAML även om katalogen är nere.
-- SAML-identitet binds till IdP:ns `NameID` (`sls_nameid` i user meta) efter första inloggningen. Namn/e-post uppdaterar profil men avgör inte vem.
-- Okänt NameID mot ett konto som redan har ett annat `sls_nameid` → `nameid_collision`. E-post räcker inte för SAML-bindning.
-- Lokal lösenordsinloggning: nöd-URL under Security (`?password=1&sls_key=...`).
+- SAML-identitet binds till IdP:ns `NameID` (`sc_nameid` i user meta) efter första inloggningen. Namn/e-post uppdaterar profil men avgör inte vem.
+- Okänt NameID mot ett konto som redan har ett annat `sc_nameid` → `nameid_collision`. E-post räcker inte för SAML-bindning.
+- Lokal lösenordsinloggning: nöd-URL under Security (`?password=1&sc_key=...`).
 - **Nöd-URL:en är känslig** (access-loggar, Referer). Rotera nyckeln via knappen under Security efter användning/läcka.
-- Bypass tillåter bara rena lokala WP-konton (inte `sls_source` saml/ldap).
+- Bypass tillåter bara rena lokala WP-konton (inte `sc_source` saml/ldap).
 
 ## 6) Säkerhetsnoteringar
 - Signaturvalidering via xmlseclibs ≥ 3.1.4 (CVE-2025-66475-patchad), prefixad för att undvika krockar.
@@ -53,22 +53,22 @@ Svensk driftguide. Utveckling, tester och zip-bygge står i [`README.md`](../REA
 - Pluginen loggar aldrig lösenord, privata nycklar eller rå assertion.
 
 ## 7) Loggar (Nginx)
-- Katalog: `uploads/saml-ldap-sso/`
-- Filnamn: `sls-<slump>.log` och `sls-audit-<slump>.log` (sparade i options).
-- Retention: **Log retention** under Security (standard 90 dagar, 7–730). Cron `sls_prune_logs` gallrar dagligen. Se [privacy.md](privacy.md).
+- Katalog: `uploads/signclave-sso/`
+- Filnamn: `sc-<slump>.log` och `sc-audit-<slump>.log` (sparade i options).
+- Retention: **Log retention** under Security (standard 90 dagar, 7–730). Cron `sc_prune_logs` gallrar dagligen. Se [privacy.md](privacy.md).
 - Apache: `.htaccess` med `Require all denied` + `index.php`.
 - Nginx (lägg i server-block):
 
 ```nginx
-location ~* /wp-content/uploads/saml-ldap-sso/ {
+location ~* /wp-content/uploads/signclave-sso/ {
     deny all;
     return 403;
 }
 ```
 
 ## 8) Kodkarta
-- `saml-ldap-sso.php` — dual Composer-autoload + `vendor-prefixed/`, `Application::boot()`.
-- `vendor-prefixed/` — Strauss-prefixad xmlseclibs (`SamlLdapSso\Vendor\…`).
+- `signclave-sso.php` — dual Composer-autoload + `vendor-prefixed/`, `Application::boot()`.
+- `vendor-prefixed/` — Strauss-prefixad xmlseclibs (`Signclave\Vendor\…`).
 - `src/Saml/SignatureVerifier.php` — XML-DSig via xmlseclibs mot pinnat cert.
 - `src/Saml/Handler.php` — ACS, NameID, protokollregler.
 - `src/Users/UserManager.php` — NameID-bindning, rollnedgradering.
@@ -81,13 +81,13 @@ location ~* /wp-content/uploads/saml-ldap-sso/ {
 Körs från WordPress-roten, pluginet måste vara aktivt:
 
 ```bash
-wp sls sso disable
-wp sls sso enable
-wp sls rotate-key
-wp sls test-ldap
-wp sls test-ldap --user=jdoe --password=secret
-wp sls test-saml --file=/tmp/response.xml
-wp sls doctor
+wp signclave sso disable
+wp signclave sso enable
+wp signclave rotate-key
+wp signclave test-ldap
+wp signclave test-ldap --user=jdoe --password=secret
+wp signclave test-saml --file=/tmp/response.xml
+wp signclave doctor
 ```
 
 `sso disable` stänger av auto-redirect till IdP så nöd-URL eller lokal inloggning fungerar utan SAML-hopp. `rotate-key` skriver den nya nöd-URL:en. `doctor` kollar cert-utgång, LDAP-konfiguration, HTTPS/proxy och loggkatalog (ingen live-bind).

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Tests\Support;
+namespace Signclave\Tests\Support;
 
-use SamlLdapSso\Ldap\ClientInterface;
+use Signclave\Ldap\ClientInterface;
 
 /**
  * In-memory LDAP client shaped like eDirectory for unit tests.

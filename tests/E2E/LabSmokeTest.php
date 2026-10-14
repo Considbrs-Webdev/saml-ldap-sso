@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-function slsE2eUrl(): string
+function scE2eUrl(): string
 {
-    return rtrim(getenv('SLS_E2E_URL') ?: 'https://saml-ldap-sso.test', '/');
+    return rtrim(getenv('SC_E2E_URL') ?: 'https://saml-ldap-sso.test', '/');
 }
 
-function slsE2eFetch(string $path): string|false
+function scE2eFetch(string $path): string|false
 {
     $context = stream_context_create([
         'http' => [
@@ -21,23 +21,23 @@ function slsE2eFetch(string $path): string|false
         ],
     ]);
 
-    return @file_get_contents(slsE2eUrl() . $path, false, $context);
+    return @file_get_contents(scE2eUrl() . $path, false, $context);
 }
 
-it('skips the Keycloak lab round-trip unless SLS_E2E=1', function () {
-    if (getenv('SLS_E2E') !== '1') {
-        skip('Set SLS_E2E=1 after starting saml-dev and the WordPress lab.');
+it('skips the Keycloak lab round-trip unless SC_E2E=1', function () {
+    if (getenv('SC_E2E') !== '1') {
+        skip('Set SC_E2E=1 after starting saml-dev and the WordPress lab.');
     }
 
-    expect(slsE2eFetch('/'))->not->toBeFalse();
+    expect(scE2eFetch('/'))->not->toBeFalse();
 });
 
 it('serves well-formed SP metadata from the lab', function () {
-    if (getenv('SLS_E2E') !== '1') {
-        skip('Set SLS_E2E=1 after starting saml-dev and the WordPress lab.');
+    if (getenv('SC_E2E') !== '1') {
+        skip('Set SC_E2E=1 after starting saml-dev and the WordPress lab.');
     }
 
-    $xml = slsE2eFetch('/?sls_saml=metadata');
+    $xml = scE2eFetch('/?sc_saml=metadata');
     expect($xml)->not->toBeFalse()
         ->and($xml)->toContain('EntityDescriptor')
         ->and($xml)->toContain('AssertionConsumerService')
@@ -45,11 +45,11 @@ it('serves well-formed SP metadata from the lab', function () {
 });
 
 it('starts SSO with an HTTP-POST AuthnRequest form', function () {
-    if (getenv('SLS_E2E') !== '1') {
-        skip('Set SLS_E2E=1 after starting saml-dev and the WordPress lab.');
+    if (getenv('SC_E2E') !== '1') {
+        skip('Set SC_E2E=1 after starting saml-dev and the WordPress lab.');
     }
 
-    $html = slsE2eFetch('/?sls_saml=login');
+    $html = scE2eFetch('/?sc_saml=login');
     expect($html)->not->toBeFalse()
         ->and(strtolower((string) $html))->toContain('samlrequest')
         ->and(strtolower((string) $html))->toContain('method="post"');

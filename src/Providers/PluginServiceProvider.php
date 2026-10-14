@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Providers;
+namespace Signclave\Providers;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Cli\Commands;
-use SamlLdapSso\Container;
-use SamlLdapSso\Ldap\ClientInterface;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Plugin;
-use SamlLdapSso\Saml\SignatureVerifier;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Clock;
-use SamlLdapSso\Support\Config;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Support\RateLimiter;
-use SamlLdapSso\Support\SystemClock;
-use SamlLdapSso\Support\View;
-use SamlLdapSso\Users\RoleMapper;
-use SamlLdapSso\Users\UserManager;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Cli\Commands;
+use Signclave\Container;
+use Signclave\Ldap\ClientInterface;
+use Signclave\Ldap\Connection;
+use Signclave\Ldap\UserLookup;
+use Signclave\Plugin;
+use Signclave\Saml\SignatureVerifier;
+use Signclave\Settings\Options;
+use Signclave\Support\Clock;
+use Signclave\Support\Config;
+use Signclave\Support\Logger;
+use Signclave\Support\RateLimiter;
+use Signclave\Support\SystemClock;
+use Signclave\Support\View;
+use Signclave\Users\RoleMapper;
+use Signclave\Users\UserManager;
 use WP_CLI;
 use WP_Error;
 use WP_User;
@@ -150,25 +150,26 @@ final class PluginServiceProvider implements ServiceProvider
         add_filter(
             'login_errors',
             static function () {
-                return __('Invalid credentials.', 'saml-ldap-sso');
+                return __('Invalid credentials.', 'signclave-sso');
             }
         );
 
         add_action(
-            'sls_prune_logs',
+            'sc_prune_logs',
             static function () use ($logger, $container): void {
                 $options = $container->make(Options::class);
                 assert($options instanceof Options);
                 $logger->prune((int) $options->get('general', 'log_retention_days', 90));
             }
         );
-        if (!wp_next_scheduled('sls_prune_logs')) {
-            wp_schedule_event(time(), 'daily', 'sls_prune_logs');
+        wp_clear_scheduled_hook('sls_prune_logs');
+        if (!wp_next_scheduled('sc_prune_logs')) {
+            wp_schedule_event(time(), 'daily', 'sc_prune_logs');
         }
 
         if (defined('WP_CLI') && WP_CLI) {
             WP_CLI::add_command(
-                'sls',
+                'signclave',
                 new Commands(
                     $container->make(Options::class),
                     $logger,

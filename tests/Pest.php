@@ -6,7 +6,7 @@ if (! defined('ABSPATH')) {
     define('ABSPATH', __DIR__ . '/');
 }
 
-if (getenv('SLS_INTEGRATION') === '1') {
+if (getenv('SC_INTEGRATION') === '1') {
     return;
 }
 
@@ -17,9 +17,9 @@ if (is_file($prefixed)) {
     require $prefixed;
 }
 
-use SamlLdapSso\Tests\Support\OptionStore;
-use SamlLdapSso\Tests\Support\TransientStore;
-use SamlLdapSso\Tests\Support\UserStore;
+use Signclave\Tests\Support\OptionStore;
+use Signclave\Tests\Support\TransientStore;
+use Signclave\Tests\Support\UserStore;
 
 if (! defined('LDAP_ESCAPE_FILTER')) {
     define('LDAP_ESCAPE_FILTER', 1);
@@ -96,7 +96,7 @@ if (! function_exists('plugin_dir_url')) {
     {
         unset($file);
 
-        return 'https://sp.example.test/wp-content/plugins/saml-ldap-sso/';
+        return 'https://sp.example.test/wp-content/plugins/signclave-sso/';
     }
 }
 
@@ -363,7 +363,7 @@ if (! function_exists('add_option')) {
 if (! function_exists('delete_option')) {
     function delete_option(string $key): bool
     {
-        OptionStore::set($key, false);
+        OptionStore::delete($key);
 
         return true;
     }
@@ -394,7 +394,7 @@ if (! function_exists('add_filter')) {
     function add_filter(string $hook, callable $callback, int $priority = 10, int $accepted = 1): bool
     {
         unset($priority, $accepted);
-        $GLOBALS['sls_test_filters'][$hook][] = $callback;
+        $GLOBALS['sc_test_filters'][$hook][] = $callback;
 
         return true;
     }
@@ -410,7 +410,7 @@ if (! function_exists('add_action')) {
 if (! function_exists('wp_add_inline_style')) {
     function wp_add_inline_style(string $handle, string $data): bool
     {
-        $GLOBALS['sls_test_inline_styles'][$handle][] = $data;
+        $GLOBALS['sc_test_inline_styles'][$handle][] = $data;
 
         return true;
     }
@@ -436,7 +436,7 @@ if (! function_exists('wp_add_inline_script')) {
     function wp_add_inline_script(string $handle, string $data, string $position = 'after'): bool
     {
         unset($position);
-        $GLOBALS['sls_test_inline_scripts'][$handle][] = $data;
+        $GLOBALS['sc_test_inline_scripts'][$handle][] = $data;
 
         return true;
     }
@@ -445,7 +445,7 @@ if (! function_exists('wp_add_inline_script')) {
 if (! function_exists('do_action')) {
     function do_action(string $hook, mixed ...$args): void
     {
-        foreach ($GLOBALS['sls_test_filters'][$hook] ?? [] as $callback) {
+        foreach ($GLOBALS['sc_test_filters'][$hook] ?? [] as $callback) {
             $callback(...$args);
         }
     }
@@ -454,7 +454,7 @@ if (! function_exists('do_action')) {
 if (! function_exists('apply_filters')) {
     function apply_filters(string $hook, mixed $value, mixed ...$args): mixed
     {
-        foreach ($GLOBALS['sls_test_filters'][$hook] ?? [] as $callback) {
+        foreach ($GLOBALS['sc_test_filters'][$hook] ?? [] as $callback) {
             $value = $callback($value, ...$args);
         }
 
@@ -554,6 +554,15 @@ if (! function_exists('update_user_meta')) {
     }
 }
 
+if (! function_exists('delete_user_meta')) {
+    function delete_user_meta(mixed $id, string $key): bool
+    {
+        UserStore::deleteMeta((int) $id, $key);
+
+        return true;
+    }
+}
+
 if (! function_exists('wp_insert_user')) {
     function wp_insert_user(array $userdata): int|WP_Error
     {
@@ -611,8 +620,8 @@ if (! function_exists('wp_safe_redirect')) {
     function wp_safe_redirect(string $location, int $status = 302, string $x_redirect_by = 'WordPress'): bool
     {
         unset($status, $x_redirect_by);
-        $GLOBALS['sls_test_redirect'] = $location;
-        throw new SamlLdapSso\Tests\Support\RedirectException($location);
+        $GLOBALS['sc_test_redirect'] = $location;
+        throw new Signclave\Tests\Support\RedirectException($location);
     }
 }
 
@@ -620,7 +629,7 @@ if (! function_exists('wp_set_auth_cookie')) {
     function wp_set_auth_cookie(int $userId, bool $remember = false, mixed $secure = '', string $token = ''): void
     {
         unset($remember, $secure, $token);
-        $GLOBALS['sls_test_auth_user'] = $userId;
+        $GLOBALS['sc_test_auth_user'] = $userId;
     }
 }
 
@@ -635,7 +644,7 @@ if (! function_exists('wp_set_current_user')) {
     {
         unset($name);
         $user = UserStore::byId($id) ?? new WP_User();
-        $GLOBALS['sls_test_current_user'] = $user;
+        $GLOBALS['sc_test_current_user'] = $user;
 
         return $user;
     }
@@ -650,7 +659,7 @@ if (! function_exists('wp_destroy_current_session')) {
 if (! function_exists('is_user_logged_in')) {
     function is_user_logged_in(): bool
     {
-        return isset($GLOBALS['sls_test_current_user']);
+        return isset($GLOBALS['sc_test_current_user']);
     }
 }
 
@@ -666,7 +675,7 @@ if (! function_exists('current_user_can')) {
 if (! function_exists('wp_get_current_user')) {
     function wp_get_current_user(): object
     {
-        return $GLOBALS['sls_test_current_user'] ?? (object) ['user_login' => 'admin', 'ID' => 1];
+        return $GLOBALS['sc_test_current_user'] ?? (object) ['user_login' => 'admin', 'ID' => 1];
     }
 }
 
@@ -680,7 +689,7 @@ if (! function_exists('wp_die')) {
 if (! function_exists('status_header')) {
     function status_header(int $code): void
     {
-        $GLOBALS['sls_test_status'] = $code;
+        $GLOBALS['sc_test_status'] = $code;
         throw new RuntimeException('status_header:' . $code);
     }
 }
@@ -698,7 +707,7 @@ if (! function_exists('wp_clear_scheduled_hook')) {
     function wp_clear_scheduled_hook(string $hook, array $args = []): int
     {
         unset($args);
-        $GLOBALS['sls_test_cleared_hooks'][] = $hook;
+        $GLOBALS['sc_test_cleared_hooks'][] = $hook;
 
         return 0;
     }
@@ -710,15 +719,15 @@ pest()->beforeEach(function (): void {
     OptionStore::reset();
     TransientStore::reset();
     UserStore::reset();
-    $GLOBALS['sls_test_filters'] = [];
+    $GLOBALS['sc_test_filters'] = [];
     unset(
-        $GLOBALS['sls_test_redirect'],
-        $GLOBALS['sls_test_auth_user'],
-        $GLOBALS['sls_test_current_user'],
-        $GLOBALS['sls_test_inline_styles'],
-        $GLOBALS['sls_test_inline_scripts'],
-        $GLOBALS['sls_test_status'],
-        $GLOBALS['sls_test_cleared_hooks']
+        $GLOBALS['sc_test_redirect'],
+        $GLOBALS['sc_test_auth_user'],
+        $GLOBALS['sc_test_current_user'],
+        $GLOBALS['sc_test_inline_styles'],
+        $GLOBALS['sc_test_inline_scripts'],
+        $GLOBALS['sc_test_status'],
+        $GLOBALS['sc_test_cleared_hooks']
     );
     $_GET = [];
     $_POST = [];

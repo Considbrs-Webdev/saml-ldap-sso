@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso;
+namespace Signclave;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Providers\ServiceProvider;
+use Signclave\Providers\ServiceProvider;
 
 /**
  * Boots service providers against an instance container.

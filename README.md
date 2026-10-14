@@ -1,4 +1,4 @@
-# SAML LDAP SSO
+# Signclave – SSO for SAML and LDAP
 
 A WordPress plugin that acts as a SAML 2.0 Service Provider with optional LDAP fallback. It redirects `wp-login.php` to your Identity Provider (for example F5 APM), validates signed assertions, binds accounts to NameID, and can map directory groups to WordPress roles.
 
@@ -34,7 +34,7 @@ Author: [Consid Borås](https://profiles.wordpress.org/considboras/). Source: [g
 
 ## Installation
 
-1. Clone or download the plugin to your WordPress plugins directory (`wp-content/plugins/saml-ldap-sso`)
+1. Clone or download the plugin to your WordPress plugins directory (`wp-content/plugins/signclave-sso`)
 2. Install PHP dependencies:
    ```bash
    composer install --no-dev
@@ -49,7 +49,7 @@ Author: [Consid Borås](https://profiles.wordpress.org/considboras/). Source: [g
    npm run build
    ```
 5. Activate the plugin through the WordPress admin panel
-6. Configure SAML (and optionally LDAP) under **Settings → SAML LDAP SSO**
+6. Configure SAML (and optionally LDAP) under **Settings → Signclave SSO**
 7. Import SP metadata in your IdP and copy the **Emergency local login** URL from Security settings
 
 For a Swedish operations guide (Nginx logs, F5, emergency login), see [`docs/instructions.md`](docs/instructions.md).
@@ -83,7 +83,7 @@ GitHub is source only. wordpress.org gets a zip you upload via SVN — not a Git
 ```bash
 npm run build
 composer install --no-dev
-wp dist-archive . ./releases/saml-ldap-sso.zip --create-target-dir --format=zip
+wp dist-archive . ./releases/signclave-sso.zip --create-target-dir --format=zip
 ```
 
 `composer install --no-dev` must run **before** the zip. It installs runtime PHP deps, downloads `bin/strauss.phar` if needed, writes `vendor-prefixed/`, and deletes unprefixed `vendor/robrichards`. Those directories are gitignored; `.distignore` still ships them in the zip (except leftover `vendor/robrichards` and Strauss aliases). `bin/` stays out of the zip.
@@ -95,8 +95,8 @@ Then upload the zip contents through wordpress.org SVN. Restore full Composer de
 No banner, icon, or screenshots in this round (skip SVN `assets/`).
 
 1. Log in as **considboras**. Add **considadam** as a plugin contributor.
-2. Submit the zip at [Add your plugin](https://wordpress.org/plugins/developers/add/) with slug `saml-ldap-sso`.
-3. After approval, commit the unzipped plugin to `https://plugins.svn.wordpress.org/saml-ldap-sso/` (`trunk/` plus tag `0.1.11`). Do not create GitHub Releases for the wordpress.org zip.
+2. Submit the zip at [Add your plugin](https://wordpress.org/plugins/developers/add/) with slug `signclave-sso`.
+3. After approval, commit the unzipped plugin to `https://plugins.svn.wordpress.org/signclave-sso/` (`trunk/` plus tag `0.1.11`). Do not create GitHub Releases for the wordpress.org zip.
 4. Review typically takes two to four weeks and at least one round of feedback.
 
 ### Asset Loading
@@ -105,7 +105,7 @@ Admin assets are enqueued using the `ViteManifest` utility class, which reads th
 
 ### Translations
 
-The plugin uses WordPress i18n. The text domain is `saml-ldap-sso`. Translation files are located in `resources/languages/` (`saml-ldap-sso.pot`, `saml-ldap-sso-sv_SE.po` / `.mo`).
+The plugin uses WordPress i18n. The text domain is `signclave-sso`. Translation files are located in `resources/languages/` (`signclave-sso.pot`, `signclave-sso-sv_SE.po` / `.mo`).
 
 #### Translation Scripts
 
@@ -113,7 +113,7 @@ The plugin uses WordPress i18n. The text domain is `saml-ldap-sso`. Translation 
 ```bash
 npm run translate:pot
 ```
-Scans `src/` and `resources/` for translatable strings and writes `resources/languages/saml-ldap-sso.pot`.
+Scans `src/` and `resources/` for translatable strings and writes `resources/languages/signclave-sso.pot`.
 
 **Update PO Files**
 ```bash
@@ -137,7 +137,7 @@ Compiles `.po` files to `.mo` (same as `npm run translate:mo`).
 
 1. Add translatable strings in PHP:
    ```php
-   __('My translatable text', 'saml-ldap-sso')
+   __('My translatable text', 'signclave-sso')
    ```
 2. Generate/update the POT file:
    ```bash
@@ -172,8 +172,8 @@ SAML fixtures: `php tests/fixtures/saml/build.php` (requires `tests/fixtures/sam
 Integration (own test database, never the lab site DB):
 
 ```bash
-bin/install-wp-tests.sh sls_tests root '' 127.0.0.1
-export SLS_WP_TESTS_DIR="$PWD/tests/.wordpress/wordpress-tests-lib"
+bin/install-wp-tests.sh sc_tests root '' 127.0.0.1
+export SC_WP_TESTS_DIR="$PWD/tests/.wordpress/wordpress-tests-lib"
 composer test:integration
 ```
 
@@ -183,11 +183,11 @@ Plugin Check against the same surface as the distribution zip:
 bin/plugin-check.sh
 ```
 
-E2E against Keycloak/OpenLDAP is manual (`SLS_E2E=1`). See `tests/E2E/README.md`.
+E2E against Keycloak/OpenLDAP is manual (`SC_E2E=1`). See `tests/E2E/README.md`.
 
 ## Architecture Overview
 
-SAML LDAP SSO uses a small, instance-based service container and four providers. There is no Illuminate/Laravel container and no static service locator.
+Signclave uses a small, instance-based service container and four providers. There is no Illuminate/Laravel container and no static service locator.
 
 ### Key Components
 
@@ -202,7 +202,7 @@ SAML LDAP SSO uses a small, instance-based service container and four providers.
 
 ### Application & Service Providers
 
-The plugin boots from `saml-ldap-sso.php`:
+The plugin boots from `signclave-sso.php`:
 
 ```php
 Application::configure()
@@ -231,40 +231,40 @@ Service providers have two lifecycle methods:
 These four filters are the public extension API (signatures will not change in patch releases):
 
 ```php
-add_filter('sls_map_attributes', function (array $mapped, array $rawAttrs): array {
+add_filter('sc_map_attributes', function (array $mapped, array $rawAttrs): array {
     // Keys: username, email, first, last, groups, nameId
     // nameId is informational; identity stays the signed assertion NameID.
     return $mapped;
 }, 10, 2);
 
-add_filter('sls_user_roles', function (array $roles, WP_User $user, array $groups, string $source): array {
+add_filter('sc_user_roles', function (array $roles, WP_User $user, array $groups, string $source): array {
     return $roles;
 }, 10, 4);
 
-add_filter('sls_allow_login', function ($allow, WP_User $user, array $context) {
+add_filter('sc_allow_login', function ($allow, WP_User $user, array $context) {
     // Return a WP_Error to reject a valid assertion before the auth cookie is set.
     return $allow;
 }, 10, 3);
 
-add_filter('sls_authn_request', function (string $xml, array $saml): string {
+add_filter('sc_authn_request', function (string $xml, array $saml): string {
     return $xml;
 }, 10, 2);
 ```
 
-`sls_trust_proxy_headers` remains available for proxy HTTPS detection. Do not rename the `sls_` prefix; it is a locked public API.
+`sc_trust_proxy_headers` remains available for proxy HTTPS detection. Do not rename the `sc_` prefix; it is a locked public API.
 
 ## WP-CLI
 
 Run from the WordPress root with the plugin active:
 
 ```bash
-wp sls sso disable
-wp sls sso enable
-wp sls rotate-key
-wp sls test-ldap
-wp sls test-ldap --user=jdoe --password=secret
-wp sls test-saml --file=/tmp/response.xml
-wp sls doctor
+wp signclave sso disable
+wp signclave sso enable
+wp signclave rotate-key
+wp signclave test-ldap
+wp signclave test-ldap --user=jdoe --password=secret
+wp signclave test-saml --file=/tmp/response.xml
+wp signclave doctor
 ```
 
 `sso disable` turns off auto-redirect to the IdP so emergency or local login works without a SAML hop. `rotate-key` prints the new emergency URL. `doctor` checks certificate expiry, LDAP configuration, HTTPS/proxy, and the log directory (no live bind).
@@ -272,8 +272,8 @@ wp sls doctor
 ## File Structure
 
 ```
-saml-ldap-sso/
-├── saml-ldap-sso.php          # Bootstrap, autoload, Application::boot()
+signclave-sso/
+├── signclave-sso.php          # Bootstrap, autoload, Application::boot()
 ├── helpers.php                # config() helper
 ├── uninstall.php
 ├── composer.json
@@ -292,7 +292,7 @@ saml-ldap-sso/
 │   ├── Settings/              # Options sanitizer
 │   ├── Support/               # Logger, Clock, RateLimiter, View
 │   ├── Assets/                # ViteManifest, admin enqueue
-│   └── Cli/                   # wp sls …
+│   └── Cli/                   # wp signclave …
 ├── resources/
 │   ├── assets/                # Vite sources (js, scss)
 │   ├── views/admin/           # Settings page markup
@@ -307,12 +307,12 @@ saml-ldap-sso/
 
 ## Configuration
 
-Settings live under **Settings → SAML LDAP SSO** (`options-general.php?page=sls-settings`).
+Settings live under **Settings → Signclave SSO** (`options-general.php?page=sc-settings`).
 
 - **SAML:** IdP Entity ID, SSO URL (the plugin sends an HTTP-POST AuthnRequest), primary/secondary X.509, attribute names (`uid`, `mail`, `givenName`, `sn`, `groups` by default). Assertions must be signed. Transient NameID is rejected; unspecified/email/persistent are accepted when the value is stable.
 - **LDAP (optional):** Off by default. When enabled and fully configured, a **new** WordPress user is created only after a directory lookup. Existing accounts can still sign in via SAML if LDAP is down. Prefer `ldaps://` on port 636.
 - **Roles:** One mapping per line: `source|group|role`. Role downgrade is on by default. Protected logins and last-admin cannot lose `administrator` via SSO.
-- **Emergency login:** `?password=1&sls_key=…` under Security. Rotate the key after use. Only local WordPress accounts (not `sls_source` saml/ldap) may use it.
+- **Emergency login:** `?password=1&sc_key=…` under Security. Rotate the key after use. Only local WordPress accounts (not `sc_source` saml/ldap) may use it.
 
 ## Further Documentation
 

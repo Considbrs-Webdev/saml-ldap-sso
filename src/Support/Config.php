@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Support;
+namespace Signclave\Support;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Injectable config reader (same files as SamlLdapSso\config()).
+ * Injectable config reader (same files as Signclave\config()).
  */
 final class Config
 {
@@ -29,7 +29,7 @@ final class Config
     }
 
     /**
-     * Inject a Config used by SamlLdapSso\config() (tests).
+     * Inject a Config used by Signclave\config() (tests).
      */
     public static function setRuntime(?self $config): void
     {

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Providers;
+namespace Signclave\Providers;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Container;
-use SamlLdapSso\Ldap\Authenticator;
-use SamlLdapSso\Ldap\ClientInterface;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Ldap\NativeClient;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Users\UserManager;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Container;
+use Signclave\Ldap\Authenticator;
+use Signclave\Ldap\ClientInterface;
+use Signclave\Ldap\Connection;
+use Signclave\Ldap\NativeClient;
+use Signclave\Ldap\UserLookup;
+use Signclave\Settings\Options;
+use Signclave\Support\Logger;
+use Signclave\Users\UserManager;
 
 /**
  * LDAP client, lookup, and password authentication services.

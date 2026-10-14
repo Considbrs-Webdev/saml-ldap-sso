@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Ldap;
+namespace Signclave\Ldap;
 
 if (!defined('ABSPATH')) {
     exit;

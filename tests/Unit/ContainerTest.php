@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Container;
+use Signclave\Container;
 
 it('returns the same singleton instance twice', function () {
     $container = new Container();

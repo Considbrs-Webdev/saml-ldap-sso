@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\RateLimiter;
-use SamlLdapSso\Tests\Support\OptionStore;
-use SamlLdapSso\Tests\Support\TransientStore;
+use Signclave\Settings\Options;
+use Signclave\Support\RateLimiter;
+use Signclave\Tests\Support\OptionStore;
+use Signclave\Tests\Support\TransientStore;
 
 it('locks after N failures and clears on success', function () {
     TransientStore::reset();
@@ -14,7 +14,7 @@ it('locks after N failures and clears on success', function () {
     $stored['general']['bypass_limit'] = 2;
     $stored['general']['bypass_window_seconds'] = 900;
     $stored['general']['bypass_lockout_seconds'] = 1800;
-    OptionStore::seed(['sls_options' => $stored]);
+    OptionStore::seed(['sc_options' => $stored]);
     $limiter = new RateLimiter(new Options());
 
     expect($limiter->isLocked('password_bypass', 'alice', '1.1.1.1'))->toBeFalse();

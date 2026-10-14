@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace SamlLdapSso\Tests\Support;
+namespace Signclave\Tests\Support;
 
-use SamlLdapSso\Auth\PasswordBypass;
-use SamlLdapSso\Ldap\Connection;
-use SamlLdapSso\Ldap\UserLookup;
-use SamlLdapSso\Saml\Handler;
-use SamlLdapSso\Saml\Metadata;
-use SamlLdapSso\Saml\SignatureVerifier;
-use SamlLdapSso\Settings\Options;
-use SamlLdapSso\Support\Clock;
-use SamlLdapSso\Support\FrozenClock;
-use SamlLdapSso\Support\Logger;
-use SamlLdapSso\Support\RateLimiter;
-use SamlLdapSso\Users\RoleMapper;
-use SamlLdapSso\Users\UserManager;
+use Signclave\Auth\PasswordBypass;
+use Signclave\Ldap\Connection;
+use Signclave\Ldap\UserLookup;
+use Signclave\Saml\Handler;
+use Signclave\Saml\Metadata;
+use Signclave\Saml\SignatureVerifier;
+use Signclave\Settings\Options;
+use Signclave\Support\Clock;
+use Signclave\Support\FrozenClock;
+use Signclave\Support\Logger;
+use Signclave\Support\RateLimiter;
+use Signclave\Users\RoleMapper;
+use Signclave\Users\UserManager;
 
 /**
  * Build a Handler with FrozenClock, FakeLdap, and in-memory options.
@@ -62,8 +62,8 @@ final class HandlerFactory
                 $stored[$section] = array_merge($stored[$section], $values);
             }
         }
-        OptionStore::seed(['sls_options' => $stored]);
-        update_option('sls_options', $stored);
+        OptionStore::seed(['sc_options' => $stored]);
+        update_option('sc_options', $stored);
     }
 
     public function make(): Handler

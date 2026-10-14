@@ -24,16 +24,16 @@ Context keys whose names contain `password`, `bind_password`, `saml_response`, `
 
 ## Where files live
 
-Under `wp-content/uploads/saml-ldap-sso/`:
+Under `wp-content/uploads/signclave-sso/`:
 
-- `sls-<random>.log` — diagnostic log
-- `sls-audit-<random>.log` — security audit log
+- `sc-<random>.log` — diagnostic log
+- `sc-audit-<random>.log` — security audit log
 
-Filenames are stored in `sls_options` and are not guessable. Apache installs also get `.htaccess` (`Require all denied`) and `index.php`. Nginx must deny the directory separately (see [instructions.md](instructions.md)).
+Filenames are stored in `sc_options` and are not guessable. Apache installs also get `.htaccess` (`Require all denied`) and `index.php`. Nginx must deny the directory separately (see [instructions.md](instructions.md)).
 
 ## Retention
 
-`general.log_retention_days` (default **90**, allowed 7–730) controls how long lines are kept. A daily cron event `sls_prune_logs` drops older lines (ISO-8601 timestamp prefix). Uninstall deletes the option and the log directory.
+`general.log_retention_days` (default **90**, allowed 7–730) controls how long lines are kept. A daily cron event `sc_prune_logs` drops older lines (ISO-8601 timestamp prefix). Uninstall deletes the option and the log directory.
 
 ## Legal note
 

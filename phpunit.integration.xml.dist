@@ -6,7 +6,7 @@
 	cacheDirectory=".phpunit.cache"
 >
 	<php>
-		<env name="SLS_INTEGRATION" value="1" force="true"/>
+		<env name="SC_INTEGRATION" value="1" force="true"/>
 	</php>
 	<testsuites>
 		<testsuite name="Integration">
