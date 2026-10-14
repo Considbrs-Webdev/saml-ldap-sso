@@ -1,0 +1,28 @@
+.sls-wrap {
+	.sls-log {
+		white-space: pre;
+
+		&--compact {
+			min-height: var(--sls-log-compact);
+			margin-top: var(--sls-stack);
+			font-size: var(--sls-log-size);
+			overflow-x: auto;
+		}
+
+		&--metadata {
+			min-height: var(--sls-log-metadata);
+			margin-top: var(--sls-stack);
+		}
+
+		&--tech {
+			min-height: var(--sls-log-tech);
+		}
+	}
+
+	.sls-metadata-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--sls-stack);
+		margin: 0 0 var(--sls-stack);
+	}
+}

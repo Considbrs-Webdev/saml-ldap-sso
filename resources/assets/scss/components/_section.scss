@@ -1,0 +1,13 @@
+.sls-wrap {
+	.sls-section {
+		background: var(--sls-surface);
+		border: 1px solid var(--sls-border);
+		border-radius: var(--sls-radius);
+		margin: var(--sls-section-gap) 0;
+		padding: var(--sls-section-pad-y) var(--sls-section-pad-x);
+
+		h2 {
+			margin-top: 0;
+		}
+	}
+}

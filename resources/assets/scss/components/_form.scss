@@ -1,0 +1,25 @@
+.sls-wrap {
+	.form-table {
+		th {
+			width: var(--sls-label-width);
+			padding-top: var(--sls-field-pad-top);
+		}
+
+		td {
+			padding-top: var(--sls-control-pad-top);
+		}
+
+		.description {
+			margin-top: var(--sls-help-gap);
+		}
+	}
+
+	.code {
+		font-family: var(--sls-mono);
+	}
+
+	.button[disabled] {
+		opacity: 0.75;
+		color: var(--sls-on-primary);
+	}
+}

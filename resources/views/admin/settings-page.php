@@ -39,7 +39,7 @@ $code_ok = array( 'code' => array() );
 		<div class="notice notice-warning">
 			<p><strong><?php esc_html_e( 'Recent SAML login rejections (ACS)', 'saml-ldap-sso' ); ?></strong></p>
 			<p class="description"><?php esc_html_e( 'The SSO diagnostic test only validates the outbound AuthnRequest. These lines show why inbound SAML responses were rejected.', 'saml-ldap-sso' ); ?></p>
-			<pre class="sls-audit-preview"><?php echo esc_html( implode( "\n", $recent_acs_failures ) ); ?></pre>
+			<pre class="sls-log sls-log--compact"><?php echo esc_html( implode( "\n", $recent_acs_failures ) ); ?></pre>
 		</div>
 	<?php endif; ?>
 	<form method="post" action="options.php">
@@ -163,7 +163,7 @@ $code_ok = array( 'code' => array() );
 						<?php else : ?>
 							<p class="description"><?php esc_html_e( 'No bypass key configured. Save settings or regenerate a key below.', 'saml-ldap-sso' ); ?></p>
 						<?php endif; ?>
-						<button type="submit" class="button" name="sls_regenerate_bypass_key" value="1"><?php esc_html_e( 'Regenerate emergency login key', 'saml-ldap-sso' ); ?></button>
+						<button type="submit" class="button button-primary" name="sls_regenerate_bypass_key" value="1"><?php esc_html_e( 'Regenerate emergency login key', 'saml-ldap-sso' ); ?></button>
 					</td>
 				</tr>
 				<tr>
@@ -198,9 +198,9 @@ $code_ok = array( 'code' => array() );
 						<p class="description"><?php echo wp_kses( __( 'Import this file in F5 under <strong>SAML Identity Provider → SAML SP Connectors → From Metadata</strong>. Set signing certificate to <strong>None</strong>.', 'saml-ldap-sso' ), array( 'strong' => array() ) ); ?></p>
 						<p class="sls-metadata-actions">
 							<a class="button button-secondary" href="<?php echo esc_url( $metadata_download ); ?>"><?php esc_html_e( 'Download metadata XML', 'saml-ldap-sso' ); ?></a>
-							<button type="button" class="button" id="sls-copy-metadata"><?php esc_html_e( 'Copy metadata', 'saml-ldap-sso' ); ?></button>
+							<button type="button" class="button button-primary" id="sls-copy-metadata"><?php esc_html_e( 'Copy metadata', 'saml-ldap-sso' ); ?></button>
 						</p>
-						<textarea id="sls-metadata-preview" rows="12" class="large-text code" readonly><?php echo esc_textarea( $metadata_xml ); ?></textarea>
+						<textarea id="sls-metadata-preview" rows="12" class="large-text code sls-log sls-log--metadata" readonly><?php echo esc_textarea( $metadata_xml ); ?></textarea>
 					</td>
 				</tr>
 			</table>
@@ -338,9 +338,9 @@ $code_ok = array( 'code' => array() );
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Connection test', 'saml-ldap-sso' ); ?></th>
 					<td>
-						<button type="button" class="button" id="sls-test-ldap-quick"><?php esc_html_e( 'Test LDAP', 'saml-ldap-sso' ); ?></button>
+						<button type="button" class="button button-primary" id="sls-test-ldap-quick"><?php esc_html_e( 'Test LDAP', 'saml-ldap-sso' ); ?></button>
 						<p class="description"><?php esc_html_e( 'Quick service bind validation for current LDAP settings.', 'saml-ldap-sso' ); ?></p>
-						<textarea id="sls-ldap-quick-log" rows="7" class="large-text code" readonly></textarea>
+						<textarea id="sls-ldap-quick-log" rows="7" class="large-text code sls-log sls-log--compact" readonly></textarea>
 					</td>
 				</tr>
 			</table>
@@ -372,14 +372,14 @@ $code_ok = array( 'code' => array() );
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Run tests', 'saml-ldap-sso' ); ?></th>
 				<td>
-					<button type="button" class="button" id="sls-test-ldap-auth"><?php esc_html_e( 'Test LDAP auth', 'saml-ldap-sso' ); ?></button>
-					<button type="button" class="button" id="sls-test-sso"><?php esc_html_e( 'Test SSO flow', 'saml-ldap-sso' ); ?></button>
+					<button type="button" class="button button-primary" id="sls-test-ldap-auth"><?php esc_html_e( 'Test LDAP auth', 'saml-ldap-sso' ); ?></button>
+					<button type="button" class="button button-primary" id="sls-test-sso"><?php esc_html_e( 'Test SSO flow', 'saml-ldap-sso' ); ?></button>
 				</td>
 			</tr>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Technical log', 'saml-ldap-sso' ); ?></th>
 				<td>
-					<textarea id="sls-tech-log" rows="14" class="large-text code" readonly></textarea>
+					<textarea id="sls-tech-log" rows="14" class="large-text code sls-log sls-log--tech" readonly></textarea>
 				</td>
 			</tr>
 		</table>
