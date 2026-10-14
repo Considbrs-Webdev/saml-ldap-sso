@@ -18,7 +18,7 @@ Audience: a reviewer who needs to know what this plugin trusts and what it activ
 - SHA-1 signatures or digests
 - Client-supplied `X-Forwarded-Proto` when proxy trust is off
 - Username or email as identity **after** the first SAML bind (identity is then the stored IdP **NameID**). First login may bind to an existing `user_login` so SAML works without LDAP when the WordPress account already exists.
-- `sc_map_attributes` rewriting NameID (the filter may map username/email/groups; identity stays the signed NameID)
+- `signclave_sso_map_attributes` rewriting NameID (the filter may map username/email/groups; identity stays the signed NameID)
 - Emergency login URL secrecy if it has appeared in access logs (rotate the key)
 
 ## Defences

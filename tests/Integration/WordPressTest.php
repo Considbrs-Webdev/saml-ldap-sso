@@ -77,11 +77,11 @@ it('creates a WordPress user from SAML NameID via UserManager', function () {
     expect($again->ID)->toBe($user->ID);
 });
 
-it('honours sc_allow_login veto', function () {
+it('honours signclave_sso_allow_login veto', function () {
     if (! scWpTests()) {
         skip('WordPress test library is not installed.');
     }
-    add_filter('sc_allow_login', static fn () => new WP_Error('nope', 'denied'));
+    add_filter('signclave_sso_allow_login', static fn () => new WP_Error('nope', 'denied'));
     $factory = new HandlerFactory();
     $factory->seedOptions(['general' => ['allow_idp_initiated' => true]]);
     update_option('siteurl', 'https://sp.example.test');

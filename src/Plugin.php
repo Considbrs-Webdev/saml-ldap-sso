@@ -62,7 +62,7 @@ final class Plugin
         }
 
         $trust = (bool) $this->options->get('general', 'trust_proxy_headers', false);
-        $trust = (bool) apply_filters('sc_trust_proxy_headers', $trust);
+        $trust = (bool) apply_filters('signclave_sso_trust_proxy_headers', $trust);
         if (!$trust) {
             return;
         }

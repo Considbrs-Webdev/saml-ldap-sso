@@ -231,27 +231,27 @@ Service providers have two lifecycle methods:
 These four filters are the public extension API (signatures will not change in patch releases):
 
 ```php
-add_filter('sc_map_attributes', function (array $mapped, array $rawAttrs): array {
+add_filter('signclave_sso_map_attributes', function (array $mapped, array $rawAttrs): array {
     // Keys: username, email, first, last, groups, nameId
     // nameId is informational; identity stays the signed assertion NameID.
     return $mapped;
 }, 10, 2);
 
-add_filter('sc_user_roles', function (array $roles, WP_User $user, array $groups, string $source): array {
+add_filter('signclave_sso_user_roles', function (array $roles, WP_User $user, array $groups, string $source): array {
     return $roles;
 }, 10, 4);
 
-add_filter('sc_allow_login', function ($allow, WP_User $user, array $context) {
+add_filter('signclave_sso_allow_login', function ($allow, WP_User $user, array $context) {
     // Return a WP_Error to reject a valid assertion before the auth cookie is set.
     return $allow;
 }, 10, 3);
 
-add_filter('sc_authn_request', function (string $xml, array $saml): string {
+add_filter('signclave_sso_authn_request', function (string $xml, array $saml): string {
     return $xml;
 }, 10, 2);
 ```
 
-`sc_trust_proxy_headers` remains available for proxy HTTPS detection. Do not rename the `sc_` prefix; it is a locked public API.
+`signclave_sso_trust_proxy_headers` remains available for proxy HTTPS detection. The public filter prefix is `signclave_sso_`.
 
 ## WP-CLI
 

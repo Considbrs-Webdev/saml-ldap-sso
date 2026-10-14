@@ -222,7 +222,7 @@ final class Handler
             esc_url_raw($acsUrl),
             esc_html($entityId)
         );
-        $xml = (string) apply_filters('sc_authn_request', $xml, $saml);
+        $xml = (string) apply_filters('signclave_sso_authn_request', $xml, $saml);
 
         $relay = $this->createRelayState();
         $samlReq = base64_encode($xml);
@@ -427,7 +427,7 @@ final class Handler
         }
 
         $mapped = apply_filters(
-            'sc_map_attributes',
+            'signclave_sso_map_attributes',
             [
                 'username' => $username,
                 'email' => $email,
@@ -484,7 +484,7 @@ final class Handler
         }
 
         $allow = apply_filters(
-            'sc_allow_login',
+            'signclave_sso_allow_login',
             true,
             $user,
             [
@@ -508,10 +508,12 @@ final class Handler
             wp_destroy_current_session();
         }
         wp_clear_auth_cookie();
+        // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core hooks.
         $secure = (bool) apply_filters('secure_auth_cookie', $this->isSecureRequest(), $user->ID);
         wp_set_auth_cookie($user->ID, false, $secure);
         wp_set_current_user($user->ID, $user->user_login);
         do_action('wp_login', $user->user_login, $user);
+        // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
         $relay = isset($_POST['RelayState'])
             ? sanitize_text_field(wp_unslash((string) $_POST['RelayState']))
@@ -975,7 +977,11 @@ final class Handler
         ];
         $hosts = array_values(array_filter(array_unique($hosts)));
 
-        return apply_filters('allowed_redirect_hosts', $hosts, '');
+        // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core redirect allow-list.
+        $hosts = apply_filters('allowed_redirect_hosts', $hosts, '');
+        // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
+        return $hosts;
     }
 
     /**

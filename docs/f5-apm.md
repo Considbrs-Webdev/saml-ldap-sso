@@ -44,7 +44,7 @@ Attribute **FriendlyName / Name** in F5 must match the plugin’s configured SAM
 | Last name | `sn` |
 | Groups | `groups` |
 
-Override them on the SAML settings screen (or map username/email/groups with the `sc_map_attributes` filter) if a connector uses different names. The filter cannot change which WordPress user the signed NameID binds to.
+Override them on the SAML settings screen (or map username/email/groups with the `signclave_sso_map_attributes` filter) if a connector uses different names. The filter cannot change which WordPress user the signed NameID binds to.
 
 ## NameID
 

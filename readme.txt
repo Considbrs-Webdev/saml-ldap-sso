@@ -85,18 +85,19 @@ From the WordPress root, with the plugin active: `wp signclave sso disable` turn
 
 These four filters are the public extension API (signatures will not change in patch releases):
 
-* `sc_map_attributes` — `( array $mapped, array $rawAttrs )`. `$mapped` keys: `username`, `email`, `first`, `last`, `groups`, `nameId`. Runs after SAML attribute extraction, before LDAP enrich. `nameId` is informational (identity stays the signed assertion NameID).
-* `sc_user_roles` — `( string[] $roles, WP_User $user, string[] $groups, string $source )`. Last word on roles after group mapping.
-* `sc_allow_login` — `( true|WP_Error $allow, WP_User $user, array $context )`. Return a `WP_Error` to reject a valid SAML assertion before the auth cookie is set.
-* `sc_authn_request` — `( string $xml, array $saml )`. Adjust the outbound AuthnRequest XML before it is POSTed to the IdP.
+* `signclave_sso_map_attributes` — `( array $mapped, array $rawAttrs )`. `$mapped` keys: `username`, `email`, `first`, `last`, `groups`, `nameId`. Runs after SAML attribute extraction, before LDAP enrich. `nameId` is informational (identity stays the signed assertion NameID).
+* `signclave_sso_user_roles` — `( string[] $roles, WP_User $user, string[] $groups, string $source )`. Last word on roles after group mapping.
+* `signclave_sso_allow_login` — `( true|WP_Error $allow, WP_User $user, array $context )`. Return a `WP_Error` to reject a valid SAML assertion before the auth cookie is set.
+* `signclave_sso_authn_request` — `( string $xml, array $saml )`. Adjust the outbound AuthnRequest XML before it is POSTed to the IdP.
 
-`sc_trust_proxy_headers` remains available for proxy HTTPS detection.
+`signclave_sso_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
 
 = 0.1.17 =
 * Rename the plugin to Signclave – SSO for SAML and LDAP. Slug and text domain are `signclave-sso`. WP-CLI is `wp signclave`.
 * Existing settings in `sls_options` are read until the first save, which stores `sc_options`.
+* Public filters use the `signclave_sso_` prefix.
 
 = 0.1.16 =
 * Update dependencies

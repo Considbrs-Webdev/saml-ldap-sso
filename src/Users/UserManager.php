@@ -228,7 +228,7 @@ final class UserManager
     public function applyRoleMapping(WP_User $user, array $groups, string $source): WP_User|WP_Error
     {
         $roles = $this->roleMapper->resolveRoles($groups, $source);
-        $filtered = apply_filters('sc_user_roles', $roles, $user, $groups, $source);
+        $filtered = apply_filters('signclave_sso_user_roles', $roles, $user, $groups, $source);
         if (is_array($filtered)) {
             $roles = array_values(array_filter(array_map('strval', $filtered), static fn (string $role): bool => '' !== $role));
         }
