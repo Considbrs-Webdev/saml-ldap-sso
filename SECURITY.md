@@ -10,7 +10,7 @@ After the plugin is listed on wordpress.org, you may also report to the **plugin
 
 ## What to include
 
-- Plugin version (`SC_VERSION` / readme Stable tag)
+- Plugin version (`SIGNCLAVE_SSO_VERSION` / readme Stable tag)
 - WordPress and PHP versions
 - Whether the report is about SAML ACS, LDAP bind, emergency login, or admin settings
 - Steps to reproduce, without sending real assertions, bind passwords, or bypass keys

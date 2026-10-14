@@ -18,8 +18,8 @@ declare(strict_types=1);
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SC_VERSION', '0.1.18' );
-define( 'SC_PLUGIN_FILE', __FILE__ );
+define( 'SIGNCLAVE_SSO_VERSION', '0.1.18' );
+define( 'SIGNCLAVE_SSO_PLUGIN_FILE', __FILE__ );
 
 use Signclave\Activator;
 use Signclave\Application;

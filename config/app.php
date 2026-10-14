@@ -9,6 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 return array(
 	'name'       => 'signclave-sso',
 	'textdomain' => 'signclave-sso',
-	'version'    => defined( 'SC_VERSION' ) ? SC_VERSION : '0.0.0',
+	'version'    => defined( 'SIGNCLAVE_SSO_VERSION' ) ? SIGNCLAVE_SSO_VERSION : '0.0.0',
 	'option_key' => 'sc_options',
 );
