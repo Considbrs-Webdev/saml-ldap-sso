@@ -8,6 +8,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception text is thrown for internal wiring errors, not printed as HTML.
+
 /**
  * Instance-based service container. No static bindings, no autowiring.
  */

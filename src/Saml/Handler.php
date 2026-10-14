@@ -8,6 +8,8 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Assertion failures are logged; the browser only sees a fixed escaped message.
+
 use DOMAttr;
 use DOMDocument;
 use DOMElement;
