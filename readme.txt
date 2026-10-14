@@ -4,7 +4,7 @@ Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.1.16
+Stable tag: 0.1.17
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,10 @@ These four filters are the public extension API (signatures will not change in p
 `sc_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
+
+= 0.1.17 =
+* Rename the plugin to Signclave – SSO for SAML and LDAP. Slug and text domain are `signclave-sso`. WP-CLI is `wp signclave`.
+* Existing settings in `sls_options` are read until the first save, which stores `sc_options`.
 
 = 0.1.16 =
 * Update dependencies
